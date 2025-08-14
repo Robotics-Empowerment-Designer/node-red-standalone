@@ -1,7 +1,0 @@
-[submodule "pepper-middleware"]
-	path = pepper-middleware
-	url = https://github.com/Robotics-Empowerment-Designer/pepper-middleware.git
-
-[submodule "sawyer-middleware"]
-	path = sawyer-middleware
-	url = https://github.com/Robotics-Empowerment-Designer/sawyer-middleware.git
