@@ -63,64 +63,59 @@ This project uses the official [Python bindings](https://github.com/aldebaran/li
 - This repository is the frontend part of NodeRed. Alone, is it useless. 
 - To connect the frontend with the robots, you need to include middleware repositories of one or more robots and start the respective docker-compose file. They are included as submodules, a Git functionality. More info on this [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules) and in the following section.
 
-1. Clone this Node-Red repository
+1. Clone this repository
 
 2. For Pepper: initialize pepper_middleware subrepo in your project
-```sh
-  git submodule init
-  git submodule update --pepper-middleware
-```
+    ```sh
+      git submodule init
+      git submodule add git@github.com:Robotics-Empowerment-Designer/pepper-middleware.git pepper-middleware
+    ```
 3. For Sawyer: Initialize sawyer_middleware subrepo in your project
-```sh
-  git submodule init
-  git submodule update --sawyer_middleware
-```
-4. If you want both Pepper and Sawyer, initialize both subrepos with
-```sh
-  git submodule init
-  git submodule update 
-```
-5. If you want to use Temi, install the Temi Middleware application on the robot and start the app "Mqtt" in the app overview.  
+     ```sh
+      git submodule init
+      git submodule add git@github.com:Robotics-Empowerment-Designer/sawyer-middleware.git sawyer-middleware
+    ```
+4. If you want to use Temi, install the Temi Middleware application on the robot and start the app "Mqtt" in the app overview.  
 
-6. Build the necessary docker containers 
+5. Build the necessary docker containers:
 
-Run the script with the following command. It will give you the opportunity to set the environment variables of EVERY robot. You can use the default values for most cases, or change the created .env file afterwards (Make sure to adjust ROBOT_IP_PEPPER and ROBOT_IP_SAWYER). Unnecessary environment variables can be ignored.
+    Run the script with the following command. It will give you the opportunity to set the environment variables of EVERY robot. You can use the default values for most cases, or change the created .env file afterwards (Make sure to adjust ROBOT_IP_PEPPER and ROBOT_IP_SAWYER). Unnecessary environment variables can be ignored.
 
-```sh
-  ./buildAll.sh
-```
+    ```sh
+      ./buildAll.sh
+    ```
 
 7. (Optional) Check the log files to see if the building was successful. You can also check if the containers are displayed in docker with
-```sh
-  docker container ls
-```
+    ```sh
+       docker container ls
+    ```
 
 8. To start the custom MQTT broker adjust the MQTT_BROKER_URL in the .env file of this project and BROKER_URL (For Localhost) in MainActivity.kt in the Temi Middleware application to your device IP. Afterwards run this command and check the connection with for example MQTT Explorer. If you want to use a broker with authentification you have to add the the username and password as env-variables and also adjust the Temi node files.
-```sh
-  docker compose -f docker-compose-mqtt.yml up
-```
+    ```sh
+       docker compose -f docker-compose-mqtt.yml up
+    ```
 
 
 9. After the initial setup is finished, you can start the respective middlewares along with NodeRed using one of the following commands: 
-```sh
-  # Pepper only
-  docker compose -f docker-compose_pepper.yml up 
+    ```sh
+      # Pepper only
+      docker compose -f docker-compose_pepper.yml up 
 
-  # Sawyer only
-  docker compose -f docker-compose_sawyer.yml up 
+      # Sawyer only
+      docker compose -f docker-compose_sawyer.yml up 
 
-  # Temi only
-  docker compose -f docker-compose_temi.yml up 
+      # Temi only
+      docker compose -f docker-compose_temi.yml up 
 
-  # Sawyer & Pepper
-  docker compose -f docker-compose_sawyer_pepper.yml up
+      # Sawyer & Pepper
+      docker compose -f docker-compose_sawyer_pepper.yml up
 
-  # Temi & Pepper
-  docker compose -f docker-compose_temi_pepper.yml up   
+      # Temi & Pepper
+      docker compose -f docker-compose_temi_pepper.yml up   
 
-  # Sawyer, Pepper & Temi
-  docker compose -f docker-compose_temi_sawyer_pepper.yml up 
-```
+      # Sawyer, Pepper & Temi
+      docker compose -f docker-compose_temi_sawyer_pepper.yml up 
+    ```
 
 > **Note:**
 > The most important setting you need to configure is ROBOT_IP_PEPPER, you can leave everything else as it is (just press enter without changing the values). If you want to configure one of the values manually later, you can do this in the .env file. In the default hcr-lab environment, you do not need to change the values at all and can leave everything default.
