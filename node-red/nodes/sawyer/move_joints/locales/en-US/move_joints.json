@@ -1,0 +1,13 @@
+{
+    "Move To Joints Position": {
+        "connectionError": "Connection error",
+        "j0":"Angle for joint n°0",
+        "j1":"Angle for joint n°1",
+        "j2":"Angle for joint n°2",
+        "j3":"Angle for joint n°3",
+        "j4":"Angle for joint n°4",
+        "j5":"Angle for joint n°5",
+        "j6":"Angle for joint n°6",
+        "r":"Speed ratio [0.0,1.0]"
+    }
+}

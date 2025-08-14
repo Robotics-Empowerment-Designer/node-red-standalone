@@ -1,0 +1,11 @@
+{
+    "Restocking": {
+        "connectionError": "Connection error",
+        "gp": "New Glass Position",
+        "g": {
+        	"1": "Position number 1",
+        	"2": "Position number 2",
+        	"3": "Position number 3"
+	}
+    }
+}

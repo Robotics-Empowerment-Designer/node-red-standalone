@@ -1,0 +1,20 @@
+<script type="text/javascript">
+    RED.nodes.registerType("clearTablet", {
+        category: "Temi",
+        color: "#4CAF50",
+        defaults: {
+            name: { value:"clearTablet" },
+            text: { value: "..." }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-eraser",
+        label: function() {
+            return this.name || "clearTablet";
+        }
+    });
+</script>
+
+<script type="text/html" data-help-name="clearTablet">
+    <p>Texts, images or anything similar are cleared from the display.</p>
+</script>

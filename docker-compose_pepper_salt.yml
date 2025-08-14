@@ -1,0 +1,201 @@
+version: "3.7"
+# currently not tested
+services:
+
+  mosquitto-salt:
+    image: mosquitto
+    environment:
+      - MQTT_PORT=${MQTT_PORT_SALT?error}
+      - TZ=Europe/Berlin
+    network_mode: host
+
+  rest-server-salt:
+    image: rest-server
+    volumes:
+      - ./rest-server:/home/
+    environment:
+      - ROBOT_NAME=${ROBOT_NAME_SALT?error}
+      - ROBOT_IP=${ROBOT_IP_SALT?error}
+      - MQTT_PORT=${MQTT_PORT_SALT?error}
+      - FLASK_PORT=${FLASK_PORT_SALT?error}
+      - FLASK_DEBUG=${FLASK_DEBUG:-0} # default 0
+      - QI_LOG_LEVEL=${QI_LOG_LEVEL:-4} # [0, 6] (6=verbose)
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED:-0}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - mosquitto-salt
+  node-red-salt1:
+    image: node-red
+    volumes:
+      - ./node-red/data-salt1:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_SALT1?error}
+      - REST_SERVER_IP=${FLASK_IP_SALT}
+      - REST_SERVER_PORT=${FLASK_PORT_SALT?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-salt
+  node-red-salt2:
+    image: node-red
+    volumes:
+      - ./node-red/data-salt2:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_SALT2?error}
+      - REST_SERVER_IP=${FLASK_IP_SALT}
+      - REST_SERVER_PORT=${FLASK_PORT_SALT?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-salt
+  node-red-salt3:
+    image: node-red
+    volumes:
+      - ./node-red/data-salt3:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_SALT3?error}
+      - REST_SERVER_IP=${FLASK_IP_SALT}
+      - REST_SERVER_PORT=${FLASK_PORT_SALT?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-salt
+  node-red-salt4:
+    image: node-red
+    volumes:
+      - ./node-red/data-salt4:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_SALT4?error}
+      - REST_SERVER_IP=${FLASK_IP_SALT}
+      - REST_SERVER_PORT=${FLASK_PORT_SALT?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-salt
+
+  mosquitto-pepper:
+    image: mosquitto
+    environment:
+      - MQTT_PORT=${MQTT_PORT_PEPPER?error}
+      - TZ=Europe/Berlin
+    network_mode: host
+
+  rest-server-pepper:
+    image: rest-server
+    volumes:
+      - ./rest-server:/home/
+    environment:
+      - ROBOT_NAME=${ROBOT_NAME_PEPPER?error}
+      - ROBOT_IP=${ROBOT_IP_PEPPER?error}
+      - MQTT_PORT=${MQTT_PORT_PEPPER?error}
+      - FLASK_PORT=${FLASK_PORT_PEPPER?error}
+      - FLASK_DEBUG=${FLASK_DEBUG:-0} # default 0
+      - QI_LOG_LEVEL=${QI_LOG_LEVEL:-4} # [0, 6] (6=verbose)
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED:-0}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - mosquitto-pepper
+  
+  node-red-pepper1:
+    image: node-red
+    volumes:
+      - ./node-red/data-pepper1:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_PEPPER1?error}
+      - REST_SERVER_IP=${FLASK_IP_PEPPER}
+      - REST_SERVER_PORT=${FLASK_PORT_PEPPER?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-pepper
+
+  node-red-pepper2:
+    image: node-red
+    volumes:
+      - ./node-red/data-pepper2:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_PEPPER2?error}
+      - REST_SERVER_IP=${FLASK_IP_PEPPER}
+      - REST_SERVER_PORT=${FLASK_PORT_PEPPER?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-pepper
+
+  node-red-pepper3:
+    image: node-red
+    volumes:
+      - ./node-red/data-pepper3:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_PEPPER3?error}
+      - REST_SERVER_IP=${FLASK_IP_PEPPER}
+      - REST_SERVER_PORT=${FLASK_PORT_PEPPER?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-pepper
+
+  node-red-pepper4:
+    image: node-red
+    volumes:
+      - ./node-red/data-pepper4:/data/
+      - ./node-red/nodes:/nodes/:ro # read only
+      - ./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro # read only
+    environment:
+      - PORT=${NODE_RED_PORT_PEPPER4?error}
+      - REST_SERVER_IP=${FLASK_IP_PEPPER}
+      - REST_SERVER_PORT=${FLASK_PORT_PEPPER?error}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TZ=Europe/Berlin
+    network_mode: host
+    depends_on:
+      - rest-server-pepper
+        # ---------------------------------------------------------------
+
+        # mdns:
+        # image: mdns
+        # volumes:
+        #   - ./mdns:/home/:ro # read only
+        # environment:
+        #   - HOSTNAME=${HOSTNAME_REST_SERVER_SALT?error}, ${HOSTNAME_REST_SERVER_PEPPER?error}
+        #   - TZ=Europe/Berlin
+        # network_mode: host
+        # esp:
+        #   image: esp
+        #   environment:
+        #     - ESP_OTA_PATH=/root/.arduino15/packages/esp32/hardware/esp32/2.0.5/tools
+        #     - ESP_IP=192.168.178.82
+        #     - ESP_OTA_PW=123456
+        #     - TZ=Europe/Berlin
+        #   network_mode: host
+
+        # mkdocs:
+        #   image: squidfunk/mkdocs-material
+        #   volumes:
+        #     - ./mkdocs:/docs
+        #   environment:
+      #     - TZ=Europe/Berlin
+    #   network_mode: host

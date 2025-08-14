@@ -1,0 +1,13 @@
+<script type="text/markdown" data-help-name="Manage Order">
+Manage the order receive by message (payload).
+This node needs a `Order Ready` node after the order has been processed.
+
+### Inputs
+: payload (string): The order. Example : 'Water' , 'Coca'.
+
+### Details
+This node transforms the order message in a new format to transmit specific commands to subsequent nodes.
+It manages the available locations on the bar and the available glass locations.
+
+The node will block a message until the previous message has been processed (`Order Ready` node). This allows to keep the priorities of orders.
+</script>

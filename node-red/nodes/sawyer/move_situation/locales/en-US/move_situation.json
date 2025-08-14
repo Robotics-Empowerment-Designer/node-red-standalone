@@ -1,0 +1,16 @@
+{
+    "Move To Situation": {
+        "connectionError": "Connection error",
+        "xp":"X position",
+        "yp":"Y position",
+        "zp":"Z position",
+        "xo":"x orientation",
+        "yo":"y orientation",
+        "zo":"z orientation",
+        "wo":"w orientation",
+        "ls":"Max linear speed m/s",
+        "la":"Max linear acceleration m/s/s",
+        "rs":"Max rotational speed m/s",
+        "ra":"Max rotational acceleration m/s/s"
+    }
+}

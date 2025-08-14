@@ -1,0 +1,10 @@
+{
+    "Gripper": {
+        "connectionError": "Connection error",
+        "action": "Choose an action",
+        "actions": {
+        	"open": "Open",
+        	"close": "Close"
+        }
+    }
+}

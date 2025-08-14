@@ -1,0 +1,45 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Restocking", {
+        category: "Sawyer_Bartender_Classic",
+        color: "#FFD500",
+        defaults: {
+            glassPos: {
+                value: "1"
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-archive",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            $("#node-input-glassPos").typedInput({
+            	types: [
+            		{
+            		value: "glassPos",
+            		options: [
+            			{ value: "1", label: node._(node.type + ".g.1") },
+            			{ value: "2", label: node._(node.type + ".g.2") },
+            			{ value: "3", label: node._(node.type + ".g.3") }
+            		]
+            		}
+            	]
+            });
+            
+          
+            
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Restocking">
+    <div class="form-row">
+        <label for="node-input-glassPos"><i class="fa fa-map-marker"></i> <span data-i18n="Restocking.gp"></span>:</label>
+        <input type="text" id="node-input-glassPos">
+    </div>
+</script>
+
+<script type="text/html" data-template-text="Restocking"></script>

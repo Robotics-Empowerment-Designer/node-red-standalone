@@ -1,0 +1,34 @@
+<script type="text/javascript">
+    RED.nodes.registerType("temiWait", {
+        category: "Temi",
+        color: "#4CAF50",
+        defaults: {
+            name: { value:"temiWait" },
+            text: { value: "..." }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-clock-o",
+        label: function() {
+            return this.name || "temiWait";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="temiWait">
+    <div class="form-row">
+        <label for="node-input-text"><i class="fa fa-file-text-o"></i> Time (s):</label>
+        <input type="text" id="node-input-text" placeholder="">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="temiWait">
+<p>Here the user can define a timeframe for the flow to "wait" at this node.</p>
+<p>It is recommended to use it after a text or image node to keep the flow running.</p>
+
+<h3>Input</h3>
+<dl class="message-properties">
+    <dt>Time</dt>
+    <dd>Time in seconds the flow should wait at this node</dd>
+</dl>
+</script>

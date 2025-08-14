@@ -1,0 +1,70 @@
+.red-ui-editableList-item-content>input.custom-robot-name {
+    width: 15%;
+}
+
+.red-ui-editableList-item-content>select.custom-robot-type {
+    width: 15%;
+}
+
+.red-ui-editableList-item-content>input.custom-robot-ip {
+    width: 20%;
+    min-width: 120px;
+}
+
+.red-ui-editableList-item-content>input.custom-robot-port {
+    width: 15%;
+}
+
+.custom-robot-connection-status-indicator-container {
+    display: inline-flex; 
+    justify-content: center; 
+    width: 13.5%;
+}
+
+.custom-robot-connection-status-indicator-container>i.status-indicator-connected {
+    display: none;
+    color: green;
+}
+
+.custom-robot-connection-status-indicator-container>i.status-indicator-unknown {
+    display: none;
+    color: yellow;
+}
+
+.custom-robot-connection-status-indicator-container>i.status-indicator-disconnected {
+    display: none;
+    color: red;
+}
+
+.contrib-red-form-row { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contrib-red-form-row label {
+    flex-shrink: 1;
+    margin-right: 10px;
+}
+
+.contrib-red-form-row input, .contrib-red-form-row select, .contrib-red-form-row>.red-ui-typedInput-container {
+    flex-grow: 1;
+    display: block;
+    max-width:60%;
+}
+
+.contrib-red-form-row>.red-ui-typedInput-container>.red-ui-typedInput-option-trigger {
+    width: 100%;
+}
+
+/* .contrib-red-form-row i {
+    width: 15px;
+} */
+
+.contrib-red-icon-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 15px;
+}

@@ -1,0 +1,41 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Get arm position", {
+        category: "Sawyer_Tools", // Kategorie, in der der Node erscheint
+        color: "#A6BBCF", // Farbcode des Nodes
+        defaults: {
+            name: {
+                value: "", // Der Standardwert für den Namen des Nodes
+                required: false,
+            },
+        },
+        inputs: 1, // Anzahl der Eingänge
+        outputs: 1, // Anzahl der Ausgänge
+        icon: "font-awesome/fa-cogs", // Icon, das im Node angezeigt wird (hier ein Zahnrad-Icon)
+        label: function () {
+            const node = this;
+            if (node.name === "") {
+                return node._(node.type + ".noName"); // Wenn kein Name gesetzt, wird "noName" angezeigt
+            }
+            return node.name; // Ansonsten den Namen des Nodes zurückgeben
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="Get arm position">
+  <div class="form-row">
+    <label for="node-input-name"
+      ><i class="fa fa-cogs"></i>
+      <span data-i18n="Get arm position.robotName"></span>:</label
+    >
+    <input
+      type="text"
+      id="node-input-name"
+      placeholder="Enter the robot name"
+      data-i18n="[placeholder]Get arm position.robotName"
+    />
+  </div>
+</script>
+
+<script type="text/html" data-template-text="Get arm position">
+  <!-- Hier können optional Text-Elemente für den Text im Info-Tab hinzugefügt werden -->
+</script>

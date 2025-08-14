@@ -1,0 +1,118 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Move Relative", {
+        category: "Sawyer_Tools",
+        color: "#00cdff",
+        outputs: 1,
+        inputs: 1,
+        defaults: {
+        	xp:{
+        		value:"0.1",
+        		required:true
+        	},
+        	yp:{
+        		value:"0",
+        		required:true
+        	},
+        	zp:{
+        		value:"0",
+        		required:true
+        	},
+        	xo:{
+        		value:"0",
+        		required:true
+        	},
+        	yo:{
+        		value:"0",
+        		required:true
+        	},
+        	zo:{
+        		value:"0",
+        		required:true
+        	},
+        	ls:{
+        		value:"0.6"
+        	},
+        	la:{
+        		value:"0.6"
+        	},
+        	rs:{
+        		value:"1.57"
+        	},
+        	ra:{
+        		value:"1.57"
+        	},
+        	frame:{
+        		value:"Base",
+        		required:true
+        	}
+        },
+        icon: "font-awesome/fa-arrows",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            $("#node-input-frame").typedInput({
+            	types: [
+            		{
+            		value: "frame",
+            		options: [
+            			{ value: "Base", label: node._(node.type + ".frames.bf") },
+            			{ value: "Tool", label: node._(node.type + ".frames.tf") }
+            		]
+            		}
+            	]
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Move Relative">
+    <div class="form-row">
+        <label for="node-input-xp"><i class="fa fa-map-marker"></i> <span data-i18n="Move Relative.xp"></span>:</label>
+        <input type="xp" id="node-input-xp">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yp"><i class="fa fa-map-marker"></i> <span data-i18n="Move Relative.yp"></span>:</label>
+        <input type="yp" id="node-input-yp" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-zp"><i class="fa fa-map-marker"></i> <span data-i18n="Move Relative.zp"></span>:</label>
+        <input type="zp" id="node-input-zp">
+    </div>
+    <div class="form-row">
+        <label for="node-input-xo"><i class="fa fa-map-marker"></i> <span data-i18n="Move Relative.xo"></span>:</label>
+        <input type="xo" id="node-input-xo">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yo"><i class="fa fa-map-marker"></i> <span data-i18n="Move Relative.yo"></span>:</label>
+        <input type="yo" id="node-input-yo">
+    </div>
+    <div class="form-row">
+        <label for="node-input-zo"><i class="fa fa-map-marker"></i> <span data-i18n="Move Relative.zo"></span>:</label>
+        <input type="zo" id="node-input-zo" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-frame"><i class="fa fa-cog"></i> <span data-i18n="Move Relative.frame"></span>:</label>
+        <input type="frame" id="node-input-frame">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ls"><i class="fa fa-cog"></i> <span data-i18n="Move Relative.ls"></span>:</label>
+        <input type="ls" id="node-input-ls">
+    </div>
+    <div class="form-row">
+        <label for="node-input-la"><i class="fa fa-cog"></i> <span data-i18n="Move Relative.la"></span>:</label>
+        <input type="la" id="node-input-la" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-rs"><i class="fa fa-cog"></i> <span data-i18n="Move Relative.rs"></span>:</label>
+        <input type="rs" id="node-input-rs">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ra"><i class="fa fa-cog"></i> <span data-i18n="Move Relative.ra"></span>:</label>
+        <input type="ra" id="node-input-ra">
+    </div>
+</script>
+<script type="text/html" data-template-text="Move Relative"></script>
+

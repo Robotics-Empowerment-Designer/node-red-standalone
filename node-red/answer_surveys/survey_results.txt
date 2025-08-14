@@ -1,0 +1,56 @@
+2024-07-17T13:27:15.288Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: ja
+2024-07-17T13:27:21.423Z - Question: Wie finden Sie die Laborführung - Answer: kann ich noch nicht beurteilen lassen oder nicht begonnen hat
+2024-07-17T13:27:28.257Z - Question: Wie finden Sie die Laborführung - Answer: sag ihm nach der Führung
+2024-07-17T13:27:33.459Z - Question: Ja, Nein oder Vielleicht - Options: ["ja","nein","vielleicht"] - Answer: vielleicht
+2024-07-25T12:33:14.766Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: ja
+2024-07-25T12:33:21.742Z - Question: Wie finden Sie die Laborführung - Answer: kann ich erst beurteilen wenn sie durchgelaufen ist
+2024-07-25T12:33:28.067Z - Question: Wie finden Sie die Laborführung - Answer: M7 bis später
+2024-07-25T12:33:34.200Z - Question: Ja, Nein oder Vielleicht - Options: ["ja","nein","vielleicht"] - Answer: vielleicht
+2024-07-25T12:33:49.684Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T12:34:06.878Z - Question: Wie finden Sie die Laborführung - Answer: muss ich mir erst anschauen
+2024-07-25T12:34:12.315Z - Question: Wie finden Sie die Laborführung - Answer: weiß ich noch nicht
+2024-07-25T12:34:17.116Z - Question: Ja, Nein oder Vielleicht - Options: ["ja","nein","vielleicht"] - Answer: nein
+2024-07-25T12:35:37.395Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: ja
+2024-07-25T12:36:24.078Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T13:38:58.770Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T13:39:04.955Z - Question: Wie finden Sie die Laborführung - Answer: gefällt mir ziemlich gut
+2024-07-25T13:39:10.020Z - Question: Wie finden Sie die Laborführung - Answer: ach weiß ich noch nicht
+2024-07-25T13:40:16.803Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: ja
+2024-07-25T14:20:46.840Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T14:20:53.091Z - Question: Wie finden Sie die Laborführung - Answer: weiß noch nicht genau
+2024-07-25T14:20:59.077Z - Question: Wie finden Sie die Laborführung - Answer: weiß noch nicht genau
+2024-07-25T14:21:04.188Z - Question: Ja, Nein oder Vielleicht - Options: ["ja","nein","vielleicht"] - Answer: vielleicht
+2024-07-25T14:24:22.286Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T14:25:03.102Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T14:58:20.478Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T14:58:27.058Z - Question: Wie finden Sie die Laborführung - Answer: kann ich noch nicht sagen
+2024-07-25T14:58:32.571Z - Question: Wie finden Sie die Laborführung - Answer: muss ich noch gucken
+2024-07-25T15:05:14.978Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: ja
+2024-07-25T15:05:21.261Z - Question: Wie finden Sie die Laborführung - Answer: muss ich mir überlegen
+2024-07-25T15:05:27.065Z - Question: Wie finden Sie die Laborführung - Answer: mal schauen
+2024-07-25T15:07:43.938Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T15:07:50.475Z - Question: Wie finden Sie die Laborführung - Answer: muss ich mir noch überlegen
+2024-07-25T15:07:56.117Z - Question: Wie finden Sie die Laborführung - Answer: schauen wir mal
+2024-07-25T15:08:01.281Z - Question: Ja, Nein oder Vielleicht - Options: ["ja","nein","vielleicht"] - Answer: ja
+2024-07-25T15:09:56.051Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T15:10:02.658Z - Question: Wie finden Sie die Laborführung - Answer: muss ich mir noch überlegen
+2024-07-25T15:10:08.888Z - Question: Wie finden Sie die Laborführung - Answer: schaue ich im Laufe des Labor für
+2024-07-25T15:51:11.788Z - Question: Finden Sie die Laborführung gut, Ja oder Nein - Options: ["ja","nein"] - Answer: nein
+2024-07-25T15:51:18.146Z - Question: Wie finden Sie die Laborführung - Answer: muss ich schauen
+2024-07-25T15:51:23.352Z - Question: Wie finden Sie die Laborführung - Answer: ist mir eigentlich egal
+2024-07-25T15:51:28.524Z - Question: Ja, Nein oder Vielleicht - Options: ["ja","nein","vielleicht"] - Answer: vielleicht
+2024-08-05T11:23:09.696Z - Question: Finden Sie die Laborführung gut, Ja gut oder Nein gut - Options: ["ja gut","nein gut"] - Answer: ja gut
+2024-08-05T11:23:17.076Z - Question: Wie finden Sie die Laborführung - Answer: geht so muss ich erst gucken wie sie ist
+2024-08-05T11:23:23.690Z - Question: Wie finden Sie die Laborführung - Answer: muss ich mir erstmal anschauen wie sie abläuft
+2024-08-05T11:23:29.403Z - Question: Ja gut, Nein gut oder Vielleicht gut - Options: ["ja gut","nein gut","vielleicht gut"] - Answer: nein gut
+2024-08-05T11:30:49.612Z - Question: Finden Sie die Laborführung gut, Ja gut oder Nein gut - Options: ["ja gut","nein gut"] - Answer: ja gut
+2024-08-05T11:30:56.616Z - Question: Wie finden Sie die Laborführung - Answer: muss ich mir erst noch anschauen da sie ja noch nicht stattgefunden hat
+2024-08-05T11:31:03.495Z - Question: Wie finden Sie die Laborführung - Answer: sehen wir nachdem ich in der Woche absolviert habe
+2024-08-05T11:31:09.791Z - Question: Ja gut, Nein gut oder Vielleicht gut - Options: ["ja gut","nein gut","vielleicht gut"] - Answer: vielleicht gut
+2024-08-05T11:42:22.890Z - Question: Finden Sie die Laborführung gut, Ja gut oder Nein gut - Options: ["ja gut","nein gut"] - Answer: nein gut
+2024-08-05T11:42:29.762Z - Question: Wie finden Sie die Laborführung - Answer: weiß ich erst nach dem Ende Labor für
+2024-08-05T11:42:35.967Z - Question: Wie finden Sie die Laborführung - Answer: weiß ich erst in die Labor durchgeführt worden ist
+2024-08-05T11:42:42.484Z - Question: Ja gut, Nein gut oder Vielleicht gut - Options: ["ja gut","nein gut","vielleicht gut"] - Answer: ja gut
+2024-08-05T11:47:12.387Z - Question: Fanden Sie die Laborführung gut, Ja gut oder Nein gut - Options: ["ja gut","nein gut"] - Answer: ja gut
+2024-08-08T11:06:05.679Z - Question: Ja gut, Nein gut oder Vielleicht gut - Options: ["ja gut","nein gut","vielleicht gut"] - Answer: vielleicht gut
+2024-08-08T11:06:55.356Z - Question: Ja gut, Nein gut oder Vielleicht gut - Options: ["ja gut","nein gut","vielleicht gut"] - Answer: vielleicht gut

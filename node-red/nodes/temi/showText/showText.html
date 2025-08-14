@@ -1,0 +1,34 @@
+<script type="text/javascript">
+    RED.nodes.registerType("temiText", {
+        category: "Temi",
+        color: "#4CAF50",
+        defaults: {
+            name: { value:"temiText" },
+            text: { value: "..." }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-font",
+        label: function() {
+            return this.name || "temiText";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="temiText">
+    <div class="form-row">
+        <label for="node-input-text"><i class="fa fa-file-text-o"></i> Text</label>
+        <input type="text" id="node-input-text" placeholder="">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="temiText">
+<p>A predefined text is displayed on the tablet.</p>
+<p>It is recommended to use a wait node afterwards (display time) to keep the flow running.</p>
+<h3>Input</h3>
+<dl class="message-properties">
+    <dt>Text</dt>
+    <dd>Text that should be displayed on the tablet</dd>
+</dl>
+
+</script>

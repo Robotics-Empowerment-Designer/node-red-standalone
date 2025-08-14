@@ -1,0 +1,19 @@
+{
+    "Get Glass": {
+        "connectionError": "Connection error",
+        "pick": "Choose the position where you want the robot pick up the glass",
+        "pick_actions": {
+        	"auto": "Automatic",
+        	"1" : "Position number 1",
+        	"2" : "Position number 2",
+        	"3": "Position number 3"
+        },
+        "deposit": "Choose the position where you want the robot places the glass",
+        "deposit_actions": {
+        	"auto": "Automatic",
+        	"1" : "Position number 1",
+        	"2" : "Position number 2",
+        	"3": "Position number 3"
+        }
+    }
+}

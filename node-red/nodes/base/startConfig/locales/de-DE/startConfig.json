@@ -1,0 +1,39 @@
+{
+    "Start config": {
+        "addItem": "Hinzufügen",
+        "configName": "Roboter-Konfigurationsname",
+        "connectionNotFound": "Roboterverbindung nicht gefunden.",
+        "deletedDuplicatedEntries": "Duplikate in der Konfiguration wurden gelöscht.",
+        "deletedEmptyRows": "Leere Einträge in der Konfiguration wurden gelöscht.",
+        "recreateConnections": "Nicht initialisierte Verbindungen erkannt. Versuche Verbindungen neu zu erstellen...",
+        "robots": "Roboter",
+        "robotName": "Robotername",
+        "robotIP": "Roboter-IP",
+        "robotPort": "Roboterport",
+        "robotType": "Robotertyp",
+        "robotStatus": "Roboterstatus",
+        "testConnectionButton": "Verbindung testen",
+        "testConnectionButtonTitle": "Testet die Verbindung aller hinterlegten Roboter.",
+
+        "common": {
+            "categories": {
+                "interaction": "Interaktion",
+                "appearance": "Erscheinung",
+                "general": "Allgemein",
+                "wait": "Warten"
+            },
+            "connectionError": "Verbindungsfehler",
+            "robotConnectionsLabel": "Roboter-auswahl",
+            "robotConnectionsHint": "Roboterauswahl",
+            "runtimeError": "Fehler. Bitte Debug-Tab prüfen (rechte Sidebar)."
+        },
+
+        "cHNodeConnectionStatus": {
+            "noRobotConnected": "Kein Roboter verbunden.",
+            "missingRobotSelection": "Kein Roboter ausgewählt.",
+            "robotOffline": "Roboter offline.",
+            "robotTypeError": "Fehlerhafter Roboter-Typ.",
+            "robotSelectionError": "Fehlerhafte Roboterwahl."
+        }
+    }
+}

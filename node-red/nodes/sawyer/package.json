@@ -1,0 +1,29 @@
+{
+    "name": "node-red-contrib-sawyer",
+    "version": "0.1.0",
+    "node-red": {
+        "nodes": {
+            "initialisation": "initialisation/initialisation.js",
+            "test": "test/test.js",
+            "gripper": "gripper/gripper.js",
+            "get_glass": "get_glass/get_glass.js",
+            "pour": "pour/pour.js",
+            "order": "order/order.js",
+            "order_ready": "order_ready/order_ready.js",
+            "display_order": "display_order/display_order.js",
+            "display": "display/display.js",
+            "lights": "lights/lights.js",
+            "pour_advanced": "pour_advanced/pour_advanced.js",
+            "get_glass_advanced": "get_glass_advanced/get_glass_advanced.js",
+            "move_joints": "move_joints/move_joints.js",
+            "move_situation": "move_situation/move_situation.js",
+            "move_relative": "move_relative/move_relative.js",
+            "give_order": "give_order/give_order.js",
+            "restocking": "restocking/restocking.js",
+            "getPos": "getpos/getpos.js"
+        }
+    },
+    "dependencies": {
+        "socket.io-client": "^4.5.4"
+    }
+}

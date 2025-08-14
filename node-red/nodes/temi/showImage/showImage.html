@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    RED.nodes.registerType("temiImage", {
+        category: "Temi",
+        color: "#4CAF50",
+        defaults: {
+            name: { value:"temiImage" },
+            text: { value: "..." }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-picture-o",
+        label: function() {
+            return this.name || "temiImage";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="temiImage">
+    <div class="form-row">
+        <label for="node-input-text"><i class="fa fa-file-text-o"></i> URL:</label>
+        <input type="text" id="node-input-text" placeholder="">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="temiImage">
+<p>An image from a predefined link is shown on the display.</p>
+<p>It is recommended to use urls to images that aren't likely to change (e.g. from own imgur account).</p>
+<p>Furthermore it is recommended to use a wait node afterwards (display time) to keep the flow running.</p>
+
+    <h3>Imput</h3>
+<dl class="message-properties"> 
+    <dt>URL</dt>
+    <dd>Url to image that should be displayed</dd>
+</dl>
+</script>

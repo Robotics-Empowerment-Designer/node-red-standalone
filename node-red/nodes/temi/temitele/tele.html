@@ -1,0 +1,46 @@
+<script type="text/javascript">
+    RED.nodes.registerType('temitele', {
+        category: 'Temi',
+        color: '#4CAF50',
+        defaults: {
+            name: { value: "TemiTele" },
+            location: { value: "" },
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-location-arrow",
+        label: function () {
+            return this.name || "temitele";
+        },
+        oneditprepare: function() {
+            // Split location to get id and value separately
+            var locationParts = this.location.split("-");
+            var locationValue = locationParts[1] || "";
+            $("#node-input-text").val(locationValue);
+        },        
+        oneditsave: function() {
+            var selectedOption = $("#node-input-text option:selected");
+            var locationId = selectedOption.attr('id');
+            var locationValue = selectedOption.val();
+            this.location = locationId + '-' + locationValue;
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="temitele">
+    <div class="form-row">
+        <label for="node-input-text"><i class="fa fa-map-marker-alt"></i>Contact list</label>
+        <select id="node-input-text">
+            <option id="1" value="MaxMustermann">Max Mustermann</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="temitele">
+<p>Choose a contact that Temi should call.</p>
+<h3> Settings</h3>
+<dl class="message-properties">
+    <dt>Contact </dt>
+    <dd>Presaved list of contacts</dd>
+</dl> 
+</script>

@@ -1,0 +1,19 @@
+{
+    "Pour": {
+        "connectionError": "Connection error",
+        "drink": "Select the type of drink",
+        "drinks_selection": {
+        	"auto": "Automatic",
+        	"water" : "Water",
+        	"orange": "Orange Juice",
+        	"coca" : "Coca Cola"
+        },
+        "pour_position": "Selects the position where the glass is",
+        "pour_pos": {
+        	"auto": "Automatic",
+        	"1" : "Position number 1",
+        	"2" : "Position number 2",
+        	"3": "Position number 3"
+        }
+    }
+}

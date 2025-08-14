@@ -1,0 +1,71 @@
+<script type="text/javascript">
+    RED.nodes.registerType('temigoto', {
+        category: 'Temi',
+        color: '#4CAF50',
+        defaults: {
+            name: { value: "TemiGoTo" },
+            location: { value: "" },
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-location-arrow",
+        label: function () {
+            return this.name || "temigoto";
+        },
+        oneditprepare: function() {
+
+            const node = this;
+            $("#node-input-location").val(this.location);
+
+            // fetching locations from server-side endpoint
+            $.getJSON("temigoto/locations", function(data){
+                const selectElement = $("#node-input-location");
+                // clearing existing options
+                selectElement.empty();
+
+                // default "Select" option
+                selectElement.append($('<option></option>').attr('value', '').text('Select a location'));
+
+                // put locations into dropdown
+                $.each(data, function(i,locationName){
+                    selectElement.append($('<option></option>').attr('value',locationName).text(locationName));
+                });
+
+                // after options laoded, set dropdown to saved value
+                if(node.location){
+                    selectElement.val(node.location);
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                //handle errors during ajax call
+                RED.notify("Failed locations loading: " + textStatus + (errorThrown? " - " + errorThrown : ""),"error");
+                console.error("Failed to load locations for TemiGoTo node:", textStatus, errorThrown);
+            });
+        },        
+        oneditsave: function() {
+            // save selected location back to node configuration when the editor closes
+            this.location = $("#node-input-location").val();
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="temigoto">
+    <div class="form-row">
+        <label for="node-input-location"><i class="fa fa-map-marker-alt"></i>Location</label>
+        <select id="node-input-location"></select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="temigoto">
+<p>Make the robot move to a predefined location on his map.</p>
+<h3>Settings:</h3>
+<dl class="message-properties">
+    <dt>Location</dt>
+    <dd>Location the robot should move to.</dd>
+</dl>
+<h3>Details:</h3>
+<ul>
+    <li>The locations can be chosen from the dropdown menu</li>
+    <li>is updated according to the locations.json file in the data folder of the Node-RED user directory.</li>
+    <li>Use the Updatelocations node beforehand to create/update the locations.json file.</li>
+</ul>
+</script>

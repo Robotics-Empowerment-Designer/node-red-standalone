@@ -1,0 +1,7 @@
+{
+    "Test": {
+        "connectionError": "Connection error",
+        "writing": "Writing something in the console",
+        "text": "Text",
+    }
+}

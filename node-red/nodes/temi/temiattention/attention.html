@@ -1,0 +1,40 @@
+<script type="text/javascript">
+    RED.nodes.registerType("attention", {
+        category: "Temi",
+        color: "#4CAF50",
+        defaults: {
+            name: { value:"attention" },
+            text: { value: "..." }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-eraser",
+        label: function() {
+            return this.name || "clearTablet";
+        }
+    });
+</script>
+
+
+<script type="text/html" data-help-name="attention">
+<p>Works together with the attention_detection.py and interrupterHelper.js to interrupt a running flow when the user isn't paying attention anymore (must be in a separate tab in Node-RED). </p>
+
+<h3>Requirements:</h3>
+<ul>
+    <li><code>attention_detection.py</code> - Python script for camera monitoring</li>
+    <li><code>interrupterHelper.js</code> - JavaScript helper for flow interruption/continuation</li>
+    <li>Must be placed in a separate Node-RED tab</li>
+</ul>
+
+<h3>How it works:</h3>
+<ul>
+    <li>The python script checks if the user is still in camera view and sends a signal if this is not the case for a certain timeframe </li>
+    <li>The Attention node then ensures that local flow variables in the tab of the running flow are set to true.</li>
+    <li>Each node, before running their main functionality, checks with the interruptHelper.js if the local flow variables are set to true and stops accordingly.</li>
+    <li>In case of an interruption, a feedback signal is sent via a global flow variable to the attention node and triggers the continuation of the flow following the attention node.</li>
+</ul>
+<h3>Example Usage:</h3>
+<p>Following the Attention node, a WaitForKeyword node can be used to ask the user if he wants to continue the original flow. According to the answer, the originally running flow can be resumed by resetting the flow variables or other possibilities can be executed.</p>
+
+
+</script>

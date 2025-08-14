@@ -1,0 +1,108 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Move To Situation", {
+        category: "Sawyer_Tools",
+        color: "#00cdff",
+        outputs: 1,
+        inputs: 1,
+        defaults: {
+        	xp:{
+        		value:"0.5",
+        		required:true
+        	},
+        	yp:{
+        		value:"0",
+        		required:true
+        	},
+        	zp:{
+        		value:"0.4",
+        		required:true
+        	},
+        	xo:{
+        		value:"0.7",
+        		required:true
+        	},
+        	yo:{
+        		value:"0.7",
+        		required:true
+        	},
+        	zo:{
+        		value:"0",
+        		required:true
+        	},
+        	wo:{
+        		value:"0",
+        		required:true
+        	},
+        	ls:{
+        		value:"0.6"
+        	},
+        	la:{
+        		value:"0.6"
+        	},
+        	rs:{
+        		value:"1.57"
+        	},
+        	ra:{
+        		value:"1.57"
+        	}
+        },
+        icon: "font-awesome/fa-arrows",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Move To Situation">
+    <div class="form-row">
+        <label for="node-input-xp"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Situation.xp"></span>:</label>
+        <input type="xp" id="node-input-xp">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yp"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Situation.yp"></span>:</label>
+        <input type="yp" id="node-input-yp" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-zp"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Situation.zp"></span>:</label>
+        <input type="zp" id="node-input-zp">
+    </div>
+    <div class="form-row">
+        <label for="node-input-xo"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Situation.xo"></span>:</label>
+        <input type="xo" id="node-input-xo">
+    </div>
+    <div class="form-row">
+        <label for="node-input-yo"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Situation.yo"></span>:</label>
+        <input type="yo" id="node-input-yo">
+    </div>
+    <div class="form-row">
+        <label for="node-input-zo"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Situation.zo"></span>:</label>
+        <input type="zo" id="node-input-zo" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-wo"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Situation.wo"></span>:</label>
+        <input type="wo" id="node-input-wo">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ls"><i class="fa fa-cog"></i> <span data-i18n="Move To Situation.ls"></span>:</label>
+        <input type="ls" id="node-input-ls">
+    </div>
+    <div class="form-row">
+        <label for="node-input-la"><i class="fa fa-cog"></i> <span data-i18n="Move To Situation.la"></span>:</label>
+        <input type="la" id="node-input-la" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-rs"><i class="fa fa-cog"></i> <span data-i18n="Move To Situation.rs"></span>:</label>
+        <input type="rs" id="node-input-rs">
+    </div>
+    <div class="form-row">
+        <label for="node-input-ra"><i class="fa fa-cog"></i> <span data-i18n="Move To Situation.ra"></span>:</label>
+        <input type="ra" id="node-input-ra">
+    </div>
+</script>
+<script type="text/html" data-template-text="Move To Situation"></script>
+

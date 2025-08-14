@@ -1,0 +1,19 @@
+{
+    "Lights": {
+        "connectionError": "Connection error",
+        "led":"Select the LED",
+        "power":"Select the new power state",
+        "leds":{
+        	"hr":"Head RED Led",
+        	"hg":"Head GREEN Led",
+        	"hb":"Head BLUE Led",
+        	"rr":"Right Hand RED Led",
+        	"rg":"Right Hand GREEN Led",
+        	"rb":"Right Hand BLUE Led"
+        },
+        "powers":{
+        	"off":"OFF",
+        	"on":"ON"
+        }
+    }
+}

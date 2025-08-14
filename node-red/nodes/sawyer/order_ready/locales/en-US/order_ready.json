@@ -1,0 +1,8 @@
+{
+    "Order Ready": {
+        "connectionError": "Connection error",
+        "exec": "Sending",
+        "h": "IP Adress where the message should be sent",
+        "p": "Communication Port"
+    }
+}

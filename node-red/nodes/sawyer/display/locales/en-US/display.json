@@ -1,0 +1,12 @@
+{
+    "Display": {
+        "connectionError": "Connection error",
+        "url":"Image(s) path",
+        "loop":"Loop through all images files infinitely",
+        "rate":"Display rate in second",
+        "loops":{
+        	"T":"True",
+        	"F":"False"
+        }
+    }
+}

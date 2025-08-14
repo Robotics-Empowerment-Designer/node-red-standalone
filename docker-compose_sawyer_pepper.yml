@@ -1,0 +1,56 @@
+
+include:
+    - ./pepper-middleware/docker-compose.yml
+    - ./sawyer_middleware/docker-compose.yml
+services:
+    node-red:
+        image: node-red
+        volumes:
+        # only show nodes of base, pepper and sawyer
+            - "./node-red/data:/data/"
+            - "./node-red/nodes/base/:/nodes/base/:ro"
+            - "./node-red/nodes/pepper/:/nodes/pepper/:ro"
+            - "./node-red/nodes/sawyer/:/nodes/sawyer/:ro"            
+            - "./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro"
+        environment:
+            # TODO: Check and delete possible unnecessary environment variables
+            - "FLASK_DEBUG=${FLASK_DEBUG?error}"
+            - "FLASK_PORT=${FLASK_PORT?error}"
+            - "FLASK_PORT_PEPPER=${FLASK_PORT_PEPPER?error}"
+            - "FLASK_IP=${FLASK_IP}"
+            - "FLASK_IP_PEPPER=${FLASK_IP_PEPPER}"
+            - "PYTHONUNBUFFERED=${PYTHONUNBUFFERED?error}"
+            - "QI_LOG_LEVEL=${QI_LOG_LEVEL?error}"
+            - "NODE_RED_PORT=${NODE_RED_PORT?error}"
+            - "NODE_RED_PORT_PEPPER=${NODE_RED_PORT_PEPPER?error}"
+            - "NODE_RED_LOG_LEVEL=${NODE_RED_LOG_LEVEL}"
+            - "NODE_ENV=${NODE_ENV?error}"
+            - "REST_SERVER_PORT=${REST_SERVER_PORT?error}"
+            - "REST_LOG_LEVEL=${REST_LOG_LEVEL?error}"
+            - "PEPPER_REST_SERVER_IP=${PEPPER_REST_SERVER_IP?error}"
+            - "PEPPER_REST_SERVER_PORT=${PEPPER_REST_SERVER_PORT?error}"
+            - "ROBOT_NAME=${ROBOT_NAME?error}"
+            - "ROBOT_IP_SAWYER=${ROBOT_IP_SAWYER?error}"
+            - "ROBOT_NAME_PEPPER=${ROBOT_NAME_PEPPER?error}"
+            - "ROBOT_IP_PEPPER=${ROBOT_IP_PEPPER?error}"
+            - "TEMI_PORT=${TEMI_PORT?error}"
+            - "TEMI_ADDRESS=${TEMI_ADDRESS?error}"
+            - "MQTT_PORT_PEPPER=${MQTT_PORT_PEPPER?error}"
+            - "HOST_IP=${HOST_IP?error}"
+            - "HOSTNAME=${HOSTNAME?error}"
+            - "OPENAI_API_KEY=${OPENAI_API_KEY}"
+            - TZ=Europe/Berlin
+        network_mode: host
+        restart: on-failure:5
+        healthcheck:
+            test: ["CMD", "curl --fail http://localhost:${NODE_RED_PORT}"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 45s
+
+        depends_on:
+            rest-server-sawyer:
+                condition: service_healthy
+            rest-server-pepper:
+                condition: service_healthy

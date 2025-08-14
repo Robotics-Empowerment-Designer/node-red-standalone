@@ -1,0 +1,20 @@
+{
+    "Move Relative": {
+        "connectionError": "Connection error",
+        "xp":"X translation",
+        "yp":"Y translation",
+        "zp":"Z translation",
+        "xo":"Roll rotation",
+        "yo":"Pitch rotation",
+        "zo":"Yaw rotation",
+        "frame":"Frame selection",
+        "frames":{
+        	"bf":"Base frame",
+        	"tf":"Tool frame"        
+        },
+        "ls":"Max linear speed m/s",
+        "la":"Max linear acceleration m/s/s",
+        "rs":"Max rotational speed m/s",
+        "ra":"Max rotational acceleration m/s/s"
+    }
+}

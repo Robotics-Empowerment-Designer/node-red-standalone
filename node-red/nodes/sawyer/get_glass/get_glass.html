@@ -1,0 +1,65 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Get Glass", {
+        category: "Sawyer_Bartender_Classic",
+        color: "#FF9700",
+        defaults: {
+            startpos: {
+                value: "automatic"
+            },
+            endpos: {
+                value: "automatic"
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-glass",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            $("#node-input-startpos").typedInput({
+            	types: [
+            		{
+            		value: "startpos",
+            		options: [
+            			{ value: "automatic", label: node._(node.type + ".pick_actions.auto") },
+            			{ value: "1", label: node._(node.type + ".pick_actions.1") },
+            			{ value: "2", label: node._(node.type + ".pick_actions.2") },
+            			{ value: "3", label: node._(node.type + ".pick_actions.3") }
+            		]
+            		}
+            	]
+            });
+            
+            $("#node-input-endpos").typedInput({
+            	types: [
+            		{
+            		value: "endpos",
+            		options: [
+            			{ value: "automatic", label: node._(node.type + ".deposit_actions.auto") },
+            			{ value: "1", label: node._(node.type + ".deposit_actions.1") },
+            			{ value: "2", label: node._(node.type + ".deposit_actions.2") },
+            			{ value: "3", label: node._(node.type + ".deposit_actions.3") }
+            		]
+            		}
+            	]
+            });
+            
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Get Glass">
+    <div class="form-row">
+        <label for="node-input-startpos"><i class="fa fa-map-marker"></i> <span data-i18n="Get Glass.pick"></span>:</label>
+        <input type="text" id="node-input-startpos">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endpos"><i class="fa fa-map-marker"></i> <span data-i18n="Get Glass.deposit"></span>:</label>
+        <input type="text" id="node-input-endpos">
+    </div>
+</script>
+
+<script type="text/html" data-template-text="Get Glass"></script>

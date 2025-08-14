@@ -1,0 +1,21 @@
+<script type="text/javascript">
+    RED.nodes.registerType("cleartopic", {
+        category: "Temi",
+        color: "#4CAF50",
+        defaults: {
+            name: { value:"clearTopic" },
+            text: { value: "..." }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-eraser",
+        label: function() {
+            return this.name || "clearTablet";
+        }
+    });
+</script>
+
+
+<script type="text/html" data-help-name="cleartopic">
+    <p>Warte Funktion. Geben Sie einen Zeit in Sekunden ein, die  Temi warten soll.</p>
+</script>

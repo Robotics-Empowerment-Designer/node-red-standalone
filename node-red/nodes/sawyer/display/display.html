@@ -1,0 +1,57 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Display", {
+        category: "Sawyer_Tools",
+        color: "#726EFF",
+        outputs: 0,
+        inputs: 1,
+        defaults: {
+        	url:{
+        		value:"/img/background.png",
+        		required: true
+        	},
+        	loop:{
+        		value:"False"
+        	},
+        	rate:{
+        		value:"1.0",
+        		validate:RED.validators.number()
+        	}
+        },
+        icon: "font-awesome/fa-television",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            $("#node-input-loop").typedInput({
+            	types: [
+            		{
+            		value: "loop",
+            		options: [
+            			{ value: "True", label: node._(node.type + ".loops.T") },
+            			{ value: "False", label: node._(node.type + ".loops.F") }
+            		]
+            		}
+            	]
+            });
+            
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Display">
+    <div class="form-row">
+        <label for="node-input-url"><i class="fa fa-commenting-o"></i> <span data-i18n="Display.url"></span>:</label>
+        <input type="url" id="node-input-url" data-i18n="[placeholder]Display.url">
+    </div>
+    <div class="form-row">
+        <label for="node-input-loop"><i class="fa fa-commenting-o"></i> <span data-i18n="Display.loop"></span>:</label>
+        <input type="loop" id="node-input-loop" data-i18n="[placeholder]Display.loop">
+    </div>
+    <div class="form-row">
+        <label for="node-input-rate"><i class="fa fa-commenting-o"></i> <span data-i18n="Display.rate"></span>:</label>
+        <input type="rate" id="node-input-rate" data-i18n="[placeholder]Display.rate">
+    </div>
+</script>
+<script type="text/html" data-template-text="Display"></script>

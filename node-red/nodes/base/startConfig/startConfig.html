@@ -1,0 +1,196 @@
+<!-- <script src="resources/node-red-contrib-base/robotConnectionUtils.js"></script>
+<script src="resources/node-red-contrib-base/nodesRobotConnectionUtils.js"></script>
+<script src="resources/node-red-contrib-base/stringSanitization.js"></script> -->
+<script type="text/javascript">
+    const defaultRobotConfig = {
+        robotName: "",
+        robotType: "",
+        robotIp: "",
+        robotPort: "",
+        connectionStatus: "unknown"
+    }
+    RED.nodes.registerType("Start config", {
+        category: "config",
+        hasUsers: false, // necessary for it to be used in the sidebar
+        defaults: {
+            name: { value: "contrib-robot-connection-sidebar" },
+            configName: { value: "", required: true },
+            test: {
+                value: ""
+            },
+            robots: {
+                value: {
+                    pepper: [defaultRobotConfig],
+                    pepper_android: [defaultRobotConfig],
+                    temi: [defaultRobotConfig],
+                    sawyer: [defaultRobotConfig]
+                }
+            },
+            isConfigDirty: {
+                value: false
+            }
+        },
+        label: function () {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            const list = $("#node-input-robot-list");
+            const templateHtml = $("#robotTemplate").html();
+            list.editableList({ // TODO FIX i18n
+                addButton: "Add item",
+                removable: true,
+                sortable: true,
+                header: $("<div>").append($.parseHTML(`
+                    <div style="margin-left: 23px; width:14.5%; display: inline-grid">Robot name</div>
+                    <div style="display: inline-grid; width: 14%;">Robot type</div>
+                    <div style="display: inline-grid; width: 19.5%;">Robot IP</div>
+                    <div style="display: inline-grid; width: 14%;">Robot Port</div>
+                    <div style="display: inline-grid;">Robot status</div>`)),
+                addItem: (row, index, data) => {
+                    $(row).html(templateHtml);
+                    if (jQuery.isEmptyObject(data)) {
+                        return;
+                    }
+
+                    node._def.initStatusIndicatorIcons(row);
+
+                    if (!Object.values(data).some(val => val === "")) {
+                        let updateConnections = isFirstOrLastRobotConnection(index, this.robots.length);
+                        console.log("updateConnections: " + updateConnections);
+                        createRobotConnection(data.robotName, data.robotType, data.robotIp, data.robotPort, updateConnections)
+                            .then(data => {
+                                node._def.updateConnectionIndicator(row, data.connectionStatus);
+                            })
+                            .catch(error => {
+                                node._def.updateConnectionIndicator(row, "disconnected", error);
+                            });
+                    }
+
+                    $(row).find(".custom-robot-name")[0].value = data.robotName;
+                    $(row).find(".custom-robot-type")[0].value = data.robotType;
+                    $(row).find(".custom-robot-ip")[0].value = data.robotIp;
+                    $(row).find(".custom-robot-port")[0].value = data.robotPort;
+                    $(row).find(".custom-robot-connection-status-value")[0].value = data.robotConnectionStatus;
+                    console.log(row);
+                },
+                removeItem: function (data) {
+                    data.pendingDeletion = true;
+                },
+                buttons: [{ // TODO FIX i18n
+                    nodeA: node ? node : null,
+                    label: "Test connection",
+                    icon: "fa fa-wifi",
+                    title: "Test the connection of all listed robots.",
+                    click: function (evt) {
+                        console.log("test connection");
+                        const items = $("#node-input-robot-list").editableList("items");
+                        Array.from(items).forEach(row => {
+                            const robotName = $(row).find(".custom-robot-name")[0].value;
+                            console.log("testing for robot: " + robotName);
+                            node._def.updateConnectionIndicator(row, "unknown"); // TODO 500?
+                            testRobotConnection(robotName, node, row);
+                        });
+                    },
+                }],
+            });
+
+            if (node.robots.length === 0) {
+                list.editableList("addItem", {
+                    robotName: "",
+                    robotType: node._(node.type + ".robotType"),
+                    robotIp: "",
+                    robotPort: ""
+                });
+            }
+
+            node.robots.forEach(robot => {
+                list.editableList("addItem", robot);
+            });
+        },
+        oneditsave: function () { // TODO create socket connection to robot 
+            const node = this;
+            const list = $("#node-input-robot-list");
+            node.robots = [];
+            usedNames = [];
+
+            const items = $("#node-input-robot-list").editableList("items");
+            Array.from(items).forEach(row => {
+                const item = {};
+
+                item.robotName = $(row).find(".custom-robot-name")[0].value;
+                item.robotType = $(row).find(".custom-robot-type")[0].value;
+
+                item.robotIp = $(row).find(".custom-robot-ip")[0].value;
+                item.robotPort = $(row).find(".custom-robot-port")[0].value;
+                item.robotConnectionStatus = $(row).find(".custom-robot-connection-status-value")[0].value;
+
+                if (items.length > 1 && Object.values(item).some(val => val === "")) {
+                    RED.notify(node._(node.type + ".deletedEmptyRows"), { type: "warning", timeout: 5000 });
+                    return;
+                }
+
+                if (usedNames.includes(item.robotName)) {
+                    RED.notify(node._(node.type + ".deletedDuplicatedEntries"), { type: "warning", timeout: 5000 });
+                    return;
+                }
+
+                node.robots.push(item);
+                usedNames.push(item);
+            });
+        },
+        initStatusIndicatorIcons: function (rowHTML) {
+            $(rowHTML).find(".status-indicator-connected").hide();
+            $(rowHTML).find(".status-indicator-unknown").show();
+            $(rowHTML).find(".status-indicator-disconnected").hide();
+        },
+        updateConnectionIndicator: function (rowHTML, connectionStatus, tooltipText = "") {
+            const connectionStatusIcons = $(rowHTML).find(".custom-robot-connection-status-icon");
+
+            connectionStatusIcons.hide();
+            connectionStatusIcons.each((index, icon) => {
+                if ($(icon).data("connection") === connectionStatus) {
+                    $(icon).show();
+                }
+
+                if ($(icon).data("connection") === "disconnected") {
+                    $(icon).attr('title', tooltipText);
+                }
+            });
+        },
+    });
+
+</script>
+<!-- TODO REMOVE MARKUP AND REPLACE WITH INFORMATION THAT THIS PART SHOULDN'T BE ACCESSED -->
+<script type="text/html"
+    data-template-name="Start config">
+    <head>
+        <link rel="stylesheet" type="text/css" href="resources/node-red-contrib-base/base_start_styles.css">
+    </head>
+    <template id="robotTemplate">
+        <input type="text" class="custom-robot-name" required="true" disabled/>
+        <select class="custom-robot-type">
+            <option value="pepper" selected>Pepper</option>
+            <option value="pepper_android" selected>Pepper 2.9</option>
+            <option value="temi">Temi</option>
+            <option value="sawyer">Sawyer</option>
+        </select>
+        <input type="text" class="custom-robot-ip" required="true" disabled/>
+        <input type="number" class="custom-robot-port" min="1" max="65535" required="true" disabled/>
+        <input type="hidden" class="custom-robot-connection-status-value" value="disconnected" />
+        <div class="custom-robot-connection-status-indicator-container">
+            <i class="fa fa-check-circle fa-lg custom-robot-connection-status-icon status-indicator-connected" data-connection="connected" title="Connected"></i>
+            <i class="fa fa-circle-o fa-lg custom-robot-connection-status-icon status-indicator-unknown" data-connection="unknown" title="Unknown"></i>
+            <i class="fa fa-times-circle fa-lg custom-robot-connection-status-icon status-indicator-disconnected" data-connection="disconnected" title="Disconnected"></i>
+            <i class="fa fa-circle-o-notch fa-spin fa-f fa-lg custom-robot-connection-status-icon status-indicator-loading"></i>
+        </div>
+    </template>
+    <div class="form-row">
+        <!-- TODO fix i18n -->
+        <label style="width: 25%;" for="node-config-input-configName"><span></span>Robot configuration name:</label>
+        <input type="text" id="node-config-input-configName" placeholder="Robot configuration name">
+    </div>
+    <div class="form-row" style="max-width: 750px;">
+        <ol id="node-input-robot-list"></ol>
+    </div>
+</script>

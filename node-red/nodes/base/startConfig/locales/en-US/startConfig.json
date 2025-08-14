@@ -1,0 +1,39 @@
+{
+    "Start config": {
+        "addItem": "Add item",
+        "configName": "Robot config name",
+        "connectionNotFound": "Robot connection not found.",
+        "deletedDuplicatedEntries": "Deleted duplicated entries.",
+        "deletedEmptyRows": "Deleted empty config rows.",
+        "recreateConnections": "Not initialized robot connections found. Trying to recreate...",
+        "robots": "Robots",
+        "robotName": "Robot name",
+        "robotIP": "Robot IP",
+        "robotPort": "Robot port",
+        "robotType": "Robot type",
+        "robotStatus": "Robot status",
+        "testConnectionButton": "Test connection",
+        "testConnectionButtonTitle": "Test connection of all specified robots.",
+
+        "common": {
+            "categories": {
+                "interaction": "Interaction",
+                "appearance": "Appearance",
+                "general": "General",
+                "wait": "Wait"
+            },
+            "connectionError": "Connection error",
+            "robotConnectionsLabel": "Robot selection",
+            "robotConnectionsHint": "Robot selection",
+            "runtimeError": "Error. Please check debug tab (right sidebar)."
+        },
+
+        "cHNodeConnectionStatus": {
+            "noRobotConnected": "No robot connected.",
+            "missingRobotSelection": "Missing robot selection.",
+            "robotOffline": "Robot offline.",
+            "robotTypeError": "Robot type error.",
+            "robotSelectionError": "Robot selection error."
+        }
+    }
+}

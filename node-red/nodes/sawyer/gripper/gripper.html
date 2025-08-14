@@ -1,0 +1,41 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Gripper", {
+        category: "Sawyer_Tools",
+        color: "#918EFF",
+        defaults: {
+            action: {
+                value: "close"
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-android",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            $("#node-input-action").typedInput({
+            	types: [
+            		{
+            		value: "action",
+            		options: [
+            			{ value: "open", label: node._(node.type + ".actions.open") },
+            			{ value: "close", label: node._(node.type + ".actions.close") }
+            		]
+            		}
+            	]
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Gripper">
+    <div class="form-row">
+        <label for="node-input-action"><i class="fa fa-android"></i> <span data-i18n="Gripper.action"></span>:</label>
+        <input type="text" id="node-input-action">
+    </div>
+</script>
+
+<script type="text/html" data-template-text="Gripper"></script>

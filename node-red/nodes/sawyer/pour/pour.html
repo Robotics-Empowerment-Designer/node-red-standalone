@@ -1,0 +1,65 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Pour", {
+        category: "Sawyer_Bartender_Classic",
+        color: "#FF9700",
+        defaults: {
+            drinks: {
+                value: "automatic"
+            },
+            endpos: {
+                value: "automatic"
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-tint",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            $("#node-input-drinks").typedInput({
+            	types: [
+            		{
+            		value: "drinks",
+            		options: [
+            			{ value: "automatic", label: node._(node.type + ".drinks_selection.auto") },
+            			{ value: "Water", label: node._(node.type + ".drinks_selection.water") },
+            			{ value: "Orange", label: node._(node.type + ".drinks_selection.orange") },
+            			{ value: "Coca", label: node._(node.type + ".drinks_selection.coca") }
+            		]
+            		}
+            	]
+            });
+            
+            $("#node-input-endpos").typedInput({
+            	types: [
+            		{
+            		value: "endpos",
+            		options: [
+            			{ value: "automatic", label: node._(node.type + ".pour_pos.auto") },
+            			{ value: "1", label: node._(node.type + ".pour_pos.1") },
+            			{ value: "2", label: node._(node.type + ".pour_pos.2") },
+            			{ value: "3", label: node._(node.type + ".pour_pos.3") }
+            		]
+            		}
+            	]
+            });
+            
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Pour">
+    <div class="form-row">
+        <label for="node-input-drinks"><i class="fa fa-glass"></i> <span data-i18n="Pour.drink"></span>:</label>
+        <input type="text" id="node-input-drinks">
+    </div>
+    <div class="form-row">
+        <label for="node-input-endpos"><i class="fa fa-map-marker"></i> <span data-i18n="Pour.pour_position"></span>:</label>
+        <input type="text" id="node-input-endpos">
+    </div>
+</script>
+
+<script type="text/html" data-template-text="Pour"></script>

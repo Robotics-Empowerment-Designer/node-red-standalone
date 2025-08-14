@@ -1,0 +1,14 @@
+<script type="text/markdown" data-help-name="Display Order">
+Display orders in the tablet.
+
+### Inputs
+: payload (string) : Received directly by the waiters with a format "num_order,drink" -> waiting state
+: payload (string) : First received from `Manage Order` -> preparing state
+: payload (string) : Second received from `Manage Order` -> ready state
+: payload (string) : Received from `Give Order` -> delete the order from the screen
+
+### Details
+This is a very specific node for the bartender application. 
+I recommend that you take inspiration from this but create your own display node for yours applications.
+
+</script>

@@ -1,0 +1,184 @@
+module.exports = function (RED) {
+    const { interruptHandling } = require("../interruptHelper");
+    
+
+    
+    const brokerConfig = {
+        brokerurl: process.env.MQTT_BROKER_URL
+    };
+
+     
+    const Topic = "temi/waitforkeyword";
+    const finishedTopic = "temi/wfk/finished";
+
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+
+    function temiwaitForKeyword(config) {
+        RED.nodes.createNode(this, config);
+        var node = this;
+        const { waitIfInterrupted, cleanup } = interruptHandling(node, mqttClient);
+        const flow = node.context().flow;
+        const global = node.context().global;
+        node.waitingNode = null;
+
+       
+        const nodeFinishedTopic = `${finishedTopic}/${node.id}`;
+        
+      
+        let currentDoneCallback = null; 
+        
+        let shouldSendNextMessage = true;       
+
+      
+        mqttClient.subscribe(nodeFinishedTopic);
+
+        // event handling for incoming mqtt-messages
+        mqttClient.on('message', function (topic, message) {
+            node.waitingNode = message;
+            
+            
+            if (topic === nodeFinishedTopic) {
+                node.warn(`Node ${node.id} received done message - currentDoneCallback exists: ${!!currentDoneCallback}`);
+                node.log("Received done message: " + message.toString());
+
+                const cancelSignalActive = global.get("cancel_flow_signal") === true;
+
+                if(cancelSignalActive){
+                    node.warn("MQTT done received but flow is cancelled - not sending to next node");
+                    if (currentDoneCallback){
+                        currentDoneCallback();
+                        currentDoneCallback = null;
+                    }
+                    return; 
+                }
+
+               
+                var receivedMessage = message.toString();
+                var messageUpperCase = receivedMessage.toUpperCase();
+                // check whether the received keyword is present in the configuration
+                const index = config.keywords.findIndex(keyword => keyword.toUpperCase() === messageUpperCase);
+
+                if (shouldSendNextMessage && index !== -1) {
+                    if (flow.get("interruption_requested") && !global.get("interruption_feedback")) {                     
+                        global.set("interruption_feedback", true);                        
+                        node.warn("Interruption feedback is sent");
+                        flow.set("interruption_requested",false);
+                    }
+                    // creating an array to prepare the output based on the number of keywords in the configuration
+                    const output = new Array(config.keywords.length).fill(null);
+
+                    // insert the node that is waiting for the recognized keyword in the array
+                    output[index] = node.waitingNode;
+
+                    node.log("Output Array: " + output);
+
+                    node.send(output);
+                    node.waitingNode = null;
+                    node.status({});
+                } else {
+                    node.error("Received keyword is not present in the configuration.");
+                }
+                
+                if (currentDoneCallback) {
+                    currentDoneCallback();
+                    currentDoneCallback = null;
+                }
+            }
+        });
+
+        // event handling for incoming node-red messages
+        this.on('input', async function (msg,send,done) {
+            node.warn("Question node was triggered");
+            node.status({ fill: "blue", shape: "dot", text: node.type + ".waiting" });
+        
+            
+            currentDoneCallback = done;
+            shouldSendNextMessage = true; 
+
+            // check if flow is cancelled
+            const cancelSignalActive = global.get("cancel_flow_signal") === true;
+            if (cancelSignalActive) {
+                node.warn("Flow explicitly cancelled by global signal.");
+                node.status({ fill: "red", shape: "cross", text: node.type + ".cancelled" });
+                shouldSendNextMessage = false; 
+                
+                
+                if (currentDoneCallback) {
+                    currentDoneCallback();
+                    currentDoneCallback = null;
+                }
+                return; 
+            }
+
+            // check if flow is interrupted
+            node.warn("Calling waitIfInterrupted");
+            node.warn(flow.get("interrupting_flow"));
+            node.warn(flow.get("interruption_requested"));
+            var wasInterrupted = await  waitIfInterrupted();
+            if (wasInterrupted){
+                node.warn("Flow was interrupted.");
+            }else{
+                node.warn("Flow is active.");
+            }
+
+            // check again if flow is cancelled
+            const cancelSignalAfterWait = global.get("cancel_flow_signal") === true;
+            if (cancelSignalAfterWait) {
+                node.warn("Flow explicitly cancelled by global signal after interruption check.");
+                node.status({ fill: "red", shape: "cross", text: node.type + ".cancelled" });
+                shouldSendNextMessage = false; 
+                
+                
+                if (currentDoneCallback) {
+                    currentDoneCallback();
+                    currentDoneCallback = null;
+                }
+                return; 
+            }else{
+                node.warn("No Cancellation after potential interruption.");
+            }
+        
+            
+            var payload = JSON.stringify(config.keywords) || "Standard message if 'text' is not provided";
+            
+            
+            var question = config.customField || "Standard message if 'customField' is not provided";
+			
+			var language = config.language || "German";
+        
+            node.log("Payload: " + payload);
+            node.log("Question: " + question);
+			node.log("Language: " + language);
+            sendMessage(Topic, JSON.stringify({ question: question, payload: payload,language: language, id: node.id }));
+        });
+        
+
+        // function to send messages over mqtt
+        function sendMessage(topic, messageText) {
+            mqttClient.publish(topic, messageText, function (err) {
+                if (err) {
+                    node.error(" Error when sending the message: " + err.toString());
+                    if (currentDoneCallback) {
+                        currentDoneCallback(err);
+                        currentDoneCallback = null; 
+                    }
+                } else {
+                    node.log("Message sent successfully: " + messageText);
+                }
+            });
+        }
+
+        // event handling for node closure
+        this.on('close', function (done) {
+            
+            mqttClient.unsubscribe(finishedTopic);
+            
+            cleanup();
+            currentDoneCallback = null; 
+            done();
+        });
+    }
+
+    // register the node type with Node-RED
+    RED.nodes.registerType("Temi wait for keyword", temiwaitForKeyword);
+};

@@ -1,0 +1,86 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Move To Joints Angle", {
+        category: "Sawyer_Tools",
+        color: "#00cdff",
+        outputs: 1,
+        inputs: 1,
+        defaults: { 
+        	j0:{
+        		value:"0",
+        		required:true
+        	},
+        	j1:{
+        		value:"-1.18",
+        		required:true
+        	},
+        	j2:{
+        		value:"0",
+        		required:true
+        	},
+        	j3:{
+        		value:"2.18",
+        		required:true
+        	},
+        	j4:{
+        		value:"0",
+        		required:true
+        	},
+        	j5:{
+        		value:"0.56",
+        		required:true
+        	},
+        	j6:{
+        		value:"3.31",
+        		required:true
+        	},
+        	r:{
+        		value:"0.3"
+        	}
+        },
+        icon: "font-awesome/fa-arrows",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Move To Joints Angle">
+    <div class="form-row">
+        <label for="node-input-j0"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Joints Position.j0"></span>:</label>
+        <input type="j0" id="node-input-j0">
+    </div>
+    <div class="form-row">
+        <label for="node-input-j1"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Joints Position.j1"></span>:</label>
+        <input type="j1" id="node-input-j1">
+    </div>
+    <div class="form-row">
+        <label for="node-input-j2"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Joints Position.j2"></span>:</label>
+        <input type="j2" id="node-input-j2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-j3"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Joints Position.j3"></span>:</label>
+        <input type="j3" id="node-input-j3">
+    </div>
+    <div class="form-row">
+        <label for="node-input-j4"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Joints Position.j4"></span>:</label>
+        <input type="j4" id="node-input-j4">
+    </div>
+    <div class="form-row">
+        <label for="node-input-j5"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Joints Position.j5"></span>:</label>
+        <input type="j5" id="node-input-j5">
+    </div>
+    <div class="form-row">
+        <label for="node-input-j6"><i class="fa fa-map-marker"></i> <span data-i18n="Move To Joints Position.j6"></span>:</label>
+        <input type="j6" id="node-input-j6">
+    </div>
+    <div class="form-row">
+        <label for="node-input-r"><i class="fa fa-cog"></i> <span data-i18n="Move To Joints Position.r"></span>:</label>
+        <input type="r" id="node-input-r">
+    </div>
+</script>
+<script type="text/html" data-template-text="Move To Joints Angle"></script>

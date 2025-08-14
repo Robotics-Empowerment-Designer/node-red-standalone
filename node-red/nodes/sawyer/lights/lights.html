@@ -1,0 +1,63 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Lights", {
+        category: "Sawyer_Tools",
+        color: "#FFFF00",
+        outputs: 1,
+        inputs: 1,
+        defaults: {
+        	led:{
+        		value:"head"
+        	},
+        	power:{
+        		value:"red"
+        	}
+        },
+        icon: "font-awesome/fa-lightbulb-o",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+            $("#node-input-led").typedInput({
+            	types: [
+            		{
+            		value: "led",
+            		options: [
+            			{ value: "head_red_light", label: node._(node.type + ".leds.hr") },
+            			{ value: "head_green_light", label: node._(node.type + ".leds.hg") },
+            			{ value: "head_blue_light", label: node._(node.type + ".leds.hb") },
+            			{ value: "right_hand_red_light", label: node._(node.type + ".leds.rr") },
+            			{ value: "right_hand_green_light", label: node._(node.type + ".leds.rg") },
+            			{ value: "right_hand_blue_light", label: node._(node.type + ".leds.rb") }
+            		]
+            		}
+            	]
+            });
+            
+            $("#node-input-power").typedInput({
+            	types: [
+            		{
+            		value: "power",
+            		options: [
+            			{ value: "off", label: node._(node.type + ".powers.off") },
+            			{ value: "on", label: node._(node.type + ".powers.on") }
+            		]
+            		}
+            	]
+            });
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Lights">
+    <div class="form-row">
+        <label for="node-input-led"><i class="fa fa-lightbulb-o"></i> <span data-i18n="Lights.led"></span>:</label>
+        <input type="led" id="node-input-led" data-i18n="[placeholder]Lights.led">
+    </div>
+    <div class="form-row">
+        <label for="node-input-power"><i class="fa fa-bolt"></i> <span data-i18n="Lights.power"></span>:</label>
+        <input type="power" id="node-input-power" data-i18n="[placeholder]Lights.power">
+    </div>
+</script>
+<script type="text/html" data-template-text="Lights"></script>

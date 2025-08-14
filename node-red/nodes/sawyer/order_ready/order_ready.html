@@ -1,0 +1,38 @@
+<script type="text/javascript">
+    RED.nodes.registerType("Order Ready", {
+        category: "Sawyer_Bartender_Classic",
+        color: "#BF8FD3",
+        inputs: 1,
+        outputs: 0,
+        defaults: {
+            ho: {
+                value: "127.0.0.1",
+                required: true
+            },
+            p: {
+                value: "2510",
+                required: true
+            }
+        },
+        icon: "font-awesome/fa-paper-plane",
+        label: () => {
+            return this.name;
+        },
+        oneditprepare: function () {
+            const node = this;
+            
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="Order Ready">
+<div class="form-row">
+        <label for="node-input-ho"><i class="fa fa-map-marker"></i> <span data-i18n="Order Ready.h"></span>:</label>
+        <input type="text" id="node-input-ho">
+    </div>
+    <div class="form-row">
+        <label for="node-input-p"><i class="fa fa-map-marker"></i> <span data-i18n="Order Ready.p"></span>:</label>
+        <input type="text" id="node-input-p">
+    </div>
+</script>
+<script type="text/html" data-template-text="Order Ready"></script>

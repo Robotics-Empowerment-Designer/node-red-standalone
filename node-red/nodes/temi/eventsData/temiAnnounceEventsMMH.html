@@ -1,0 +1,36 @@
+<script type="text/javascript">
+    RED.nodes.registerType('announceEventsMMH',{
+        category: 'Temi',
+        color: '#4CAF50',
+        defaults: {
+            name: {value:"announceEventsMMH"},
+            text: {value:""},
+            language: {value:"german"}, 
+            animation: {value:"false"} 
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-commenting-o",
+        label: function() {
+            return this.name || "temisay";
+        }
+    });
+</script>
+<script type="announceEventsMMH/html" data-template-name="announceEventsMMH">
+    
+    <div class="form-row">
+        <label for="node-input-animation"><i class="fa fa-animation"></i> Animation</label>
+        <input type="checkbox" id="node-input-animation">
+    </div>
+
+</script>
+
+
+<script type="announceEventsMMH/html" data-help-name="announceEventsMMH">
+<p>A variation of the Say-node. It fetches the currently running events at the MachMit!Haus and communicates them to the user via TTS</p>
+<h3> Settings</h3>
+<dl class="message-properties">
+    <dt>Animation </dt>
+    <dd>Animmated Emoji during the TTS</dd>
+</dl> 
+</script>

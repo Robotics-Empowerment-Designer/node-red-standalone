@@ -1,0 +1,42 @@
+{
+  "name": "node-red-contrib-temi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "node-red": {
+    "nodes": {
+      "ping": "ping/ping.js",
+      "temiwaitforkeyword": "temiwaitforkeyword/waitforkeyword.js",
+      "temisay": "temisay/say.js",
+      "temigoto": "temigoto/goto.js",
+      "showText": "showText/showText.js",
+      "showImage": "showImage/showImage.js",
+      "showVideo": "showVideo/showVideo.js",
+      "clearTablet": "clearTablet/clearTablet.js",
+      "temitele": "temitele/tele.js",
+      "wait": "wait/wait.js",
+      "cleartopic": "cleartopic/cleartopic.js",
+
+      "announceEventsMMH": "eventsData/temiAnnounceEventsMMH.js",
+
+      "temichat": "temichat/temichat.js",
+      "attention": "temiattention/attention.js",
+      "updateLocations": "updateLocations/updateLocations.js"
+
+	
+
+
+	
+	
+      
+    }
+  },
+  "dependencies": {
+    "mqtt": "^5.3.3"
+  }
+}

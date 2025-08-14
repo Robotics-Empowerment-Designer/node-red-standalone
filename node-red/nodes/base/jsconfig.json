@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "commonjs",
+      "checkJs": true,
+      "allowJs": true,
+      "skipLibCheck": true,
+      "noImplicitAny": false,
+      "paths": {
+        "node-red-contrib-base/*": [
+          "./*"
+        ]
+      }
+    },
+    "include": [
+      "./**/*.js",
+      "types.d.ts",
+      "./node_modules/@types/**/*.d.ts",
+      "./node_modules/winston/index.d.ts"
+    ]
+  }

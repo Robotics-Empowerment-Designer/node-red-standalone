@@ -1,0 +1,454 @@
+<script src="resources/node-red-contrib-base/robotConnectionUtils.js"></script>
+<script src="resources/node-red-contrib-base/nodesRobotConnectionUtils.js"></script>
+<script src="resources/node-red-contrib-base/stringSanitization.js"></script>
+<script type="text/javascript">
+    // ADAPTED FROM: https://discourse.nodered.org/t/tutorial-create-a-plugin-and-persist-the-data-in-a-config-node/82020
+    (function () {
+        var globalRobotsConfigNode = null;
+        const robotTypesUI = ["Pepper_Android", "Pepper", "Temi", "Sawyer"]; // to add a new robot type, add it here, another accordion in the html at the bottom and a new entry in the robotConfigs object in startConfig.html
+        const defaultRobotConfig = {
+            robotName: "",
+            robotType: "",
+            robotIp: "",
+            robotPort: "",
+        }
+        const robotConfigs = {
+            pepper: [defaultRobotConfig],
+            pepper_android: [defaultRobotConfig],
+            temi: [defaultRobotConfig],
+            sawyer: [defaultRobotConfig]
+        }
+        let configuredRobotsAmount = { connected: 0, disconnected: 0 };
+        let savedRobots = null;
+
+
+        function ensureRobotConfigNodeExists() {
+            // If we had found it previously, check if it has been deleted by the user behind our back
+            if (globalRobotsConfigNode !== null) {
+                var configNode = RED.nodes.node(globalRobotsConfigNode.id);
+                if (configNode === null) { globalRobotsConfigNode = null; }
+            }
+
+            // If not found previously, let's go find it
+            if (globalRobotsConfigNode === null) {
+                var configNodes = [];
+                RED.nodes.eachConfig(function (configNode) {
+                    if (configNode.type === 'Start config') {
+                        configNodes.push(configNode);
+                    }
+                });
+
+                // Make sure we only have 1 config node
+                while (configNodes.length > 1) {
+                    var configNode = configNodes.pop();
+                    RED.nodes.remove(configNode.id);
+                    RED.nodes.dirty(true);
+                }
+
+                // When we found a config node, let's use that one
+                if (configNodes.length === 1) { globalRobotsConfigNode = configNodes[0]; }
+            }
+
+            // When it doesn't exist yet, create it if required
+            if (globalRobotsConfigNode === null) {
+                // Remark: since this config node is dynamically created (and only used in this sidebar which isn't another node), the config
+                // node is in fact "unused".  But since we don't want it to appear "unused" in the "config nodes" panel, we need to set hasUsers
+                // to false (see https://github.com/node-red/node-red/blob/master/CHANGELOG.md#0161-maintenance-release).
+                // The hasUsers needs also to be specified in the RED.nodes.registerType statement!
+                globalRobotsConfigNode = {
+                    id: RED.nodes.id(),
+                    _def: RED.nodes.getType("Start config"),
+                    type: "Start config",
+                    hasUsers: false,
+                    defaults: {
+                        name: { value: "Start config" },
+                        configName: { value: "", required: true },
+                        isConfigDirty: { value: false }
+                    },
+                    robots: {
+                        pepper: [],
+                        pepper_android: [],
+                        temi: [],
+                        sawyer: []
+                    },
+                    dirty: false,
+                    users: [],
+                    name: "Robot configurations",
+                    label: function () { return this.name || "Robot configurations" }
+                }
+
+                // Add the new config node to the collection of Node-RED nodes
+                RED.nodes.add(globalRobotsConfigNode);
+
+                // Make sure the "Deploy" button becomes active
+                RED.nodes.dirty(true);
+            }
+        }
+
+        function setupConfigNodeHTMl() {
+            // create the accordions for each robot type (later configurable, for now use ["Pepper", "Temi", "Sawyer"])
+            robotTypesUI.forEach(robotType => {
+                const robotTypeLower = robotType.toLowerCase();
+                const accordion = setupAccordion(robotType);
+                const isListEmpty = setupEditableList(robotTypeLower) ? 0 : 1; // 1 closed, 0 open
+                accordion.accordion("option", "active", isListEmpty);
+            });
+        }
+
+        function setupAccordion(robotType) {
+            return $(`#accordion-${robotType.toLowerCase()}`).accordion({
+                collapsible: true,
+                active: robotType === robotTypesUI[0],
+                heightStyle: "content"
+            });
+        }
+
+        function setupEditableList(robotType) {
+            ensureRobotConfigNodeExists();
+            const robotConnectionStoreCount = Object.values(globalRobotsConfigNode.robots).reduce((sum, array) => sum + array.length, 0);
+            let list = $(`#node-config-robot-list-${robotType.toLowerCase()}`);
+            let robotItemTemplate = $("#robotTemplate").html();
+            list.editableList({ // TODO FIX i18n
+                addButton: "Add item",
+                removable: true,
+                _robotType: robotType,
+                addItem: (row, index, data) => {
+                    ensureRobotConfigNodeExists();
+                    $(row).html(robotItemTemplate);
+                    setupEditableListEntries(list, row, index, data);
+                },
+                removeItem: function (data) {
+                    ensureRobotConfigNodeExists();
+                    deleteRobotConnection(globalRobotsConfigNode, escapeHtml(data.robotName), robotType);
+                }
+            });
+
+            let hasRobots = false;
+            try {
+                globalRobotsConfigNode.robots[robotType].forEach(robot => {
+                    list.editableList('addItem', robot);
+                    hasRobots = true;
+                });
+            } catch (e) {
+                console.warn(e);
+            }
+
+            return hasRobots;
+        }
+
+        function setupEditableListEntries(list, rowHtml, index, data) {
+            const robot = { "robotName": escapeHtml(data.robotName), "robotType": escapeHtml(list.editableList("option", "_robotType")), "robotIp": escapeHtml(data.robotIp), "robotPort": escapeHtml(data.robotPort) };
+
+            for (const input of ["Name", "Type", "Ip", "Port"]) {
+                const inputEle = $(rowHtml).find(".custom-robot-" + input.toLowerCase() + "-input").first();
+                inputEle.val(globalRobotsConfigNode.robots[robot.robotType]?.[index]?.["robot" + input]);
+
+                inputEle.change(function () {
+                    ensureRobotConfigNodeExists();
+
+                    if (!globalRobotsConfigNode.robots[robot.robotType][index]) { // if it's a new entry, create a default one
+                        globalRobotsConfigNode.robots[robot.robotType][index] = defaultRobotConfig;
+                        globalRobotsConfigNode.robots[robot.robotType][index].robotType = escapeHtml(list.editableList("option", "_robotType"));
+                    }
+
+                    if (globalRobotsConfigNode.robots[robot.robotType][index]["robot" + input] !== escapeHtml($(this).val())) { // only update if the value has changed
+                        globalRobotsConfigNode.robots[robot.robotType][index]["robot" + input] = escapeHtml($(this).val());
+                        globalRobotsConfigNode.robots[robot.robotType][index].robotType = escapeHtml(list.editableList("option", "_robotType")); // ugly workaround to keep the robotType in sync, it's always the last entry of robotTypesUI otherwise
+                        globalRobotsConfigNode.isConfigDirty = true;
+                        RED.nodes.dirty(true);
+                    }
+                })
+            }
+
+            if (jQuery.isEmptyObject(data)) {
+                return;
+            }
+
+            initStatusIndicatorIcons(rowHtml);
+
+            $(rowHtml).find(".custom-robot-name")[0].value = robot.robotName;
+            $(rowHtml).find(".custom-robot-type")[0].value = robot.robotType;
+            $(rowHtml).find(".custom-robot-ip")[0].value = robot.robotIp;
+            $(rowHtml).find(".custom-robot-port")[0].value = robot.robotPort;
+            $(rowHtml).find(".custom-robot-connection-status-value")[0].value = robot.robotConnectionStatus;
+        }
+
+        function updateConnectionIndicator(data, tooltipText = "") { // TODO FUCKED WENN OFFLINE WIEDER ONLINE UPDATE FEHLT (SERVERSEITIG FUCKED WENN ABGEKACKT DANN WEITERHIN ALS ONLINE ANGEZEIGT)
+            try {
+                if (!data || data.length === 0) {
+                    return;
+                }
+                const connectionEntries = [...data.successfulConnections, ...data.failedConnections];
+
+                let list;
+                let entries;
+                let lastRobotType = "";
+
+                for (const connection of connectionEntries) {
+                    if (connection === null || connection === undefined) {
+                        continue;
+                    }
+
+                    if (lastRobotType !== connection.robotType) {
+                        list = $(`#node-config-robot-list-${connection.robotType.toLowerCase()}`);
+                        entries = list.find(".robot-sidebar-list-item");
+                        lastRobotType = connection.robotType;
+                    }
+
+                    // const connectionStatus = connection.hasKnownError ? "disconnected" : "connected";
+                    const rowHtml = entries.find(".custom-robot-name-input").map((index, entry) => {
+                        if ($(entry).val() === connection.robotName) {
+                            return $(entry).parent()[0];
+                        } else if (index === entries.length - 1) {
+                            return null;
+                        }
+                    });
+
+                    if (!rowHtml) {
+                        console.log("No corresponding entry found for robot: " + connection.robotName);
+                        return;
+                    }
+
+                    const connectionStatusIcons = $(rowHtml).find(".custom-robot-connection-status-icon");
+                    let tooltipOverwrite = "";
+                    connectionStatusIcons.hide();
+                    connectionStatusIcons.each((index, icon) => {
+
+                        if ($(icon).data("connection") === connection.connectionStatus) {
+                            if (connection.connectionStatus === "disconnected") {
+                                tooltipOverwrite = tooltipText === "" ? connection.message : tooltipText;
+                                $(icon).attr('title', tooltipOverwrite);
+                                tooltipOverwrite = "";
+                            }
+                            $(icon).show();
+                        }
+                    });
+
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function initStatusIndicatorIcons(rowHTML) {
+            $(rowHTML).find(".status-indicator-connected").hide();
+            $(rowHTML).find(".status-indicator-unknown").show();
+            $(rowHTML).find(".status-indicator-disconnected").hide();
+        }
+
+        function checkAndUpdateConnections(savedRobots, configuredRobotsAmount, forceCheck = false) {
+            ensureRobotConfigNodeExists();
+            console.log("Checking and updating connections");
+            if (globalRobotsConfigNode.isConnectionTestRunning) {
+                return;
+            }
+            globalRobotsConfigNode.isConnectionTestRunning = true;
+
+            testRobotConnections(savedRobots).then(data => {
+                console.log("Tested robot connections");
+                const hasConnectionChanges = data.successfulConnections?.length !== configuredRobotsAmount.connected || data.failedConnections?.length !== configuredRobotsAmount.disconnected;
+
+                configuredRobotsAmount.connected = data.successfulConnections?.length;
+                configuredRobotsAmount.disconnected = data.failedConnections?.length;
+
+                updateConnectionIndicator(data);
+                if (hasConnectionChanges || forceCheck) { // EOD NO ROBOT CONNECTED STILL REMAINS EVEN AFTER ICON GOT UPDATED; PROBABLY IN CONNECTIONHELPER FIX NEEDED
+                    triggerCheckConnection().catch(e => {
+                        console.error(e);
+                    }).finally(() => {
+                        globalRobotsConfigNode.isConnectionTestRunning = false;
+                    });
+                } else {
+                    globalRobotsConfigNode.isConnectionTestRunning = false;
+                }
+            }).catch(e => {
+                console.error(e);
+                globalRobotsConfigNode.isConnectionTestRunning = false;
+            });
+        }
+
+        var initializeSidebar = function () {
+            // Remove the event handler, to avoid that the sidebar is initialized at every deploy
+            RED.events.off('runtime-state', initializeSidebar);
+
+            // The html content of the sidebar has been specified below as a data-template, from where it can be loaded:
+            var content = $($('script[type="text/x-red"][data-template-name="robotConnectionSidebar"]').i18n().html());
+
+            // Add a "Your sidebar" tabsheet to the right sidebar panel, in which this sidebar panel can be displayed
+            RED.sidebar.addTab({
+                id: "robotConnectionSidebar",
+                label: "Robots", // short name for the tab
+                name: "Robot configuration menu", // long name for the menu
+                content: content,
+                closeable: true,
+                disableOnEdit: true,
+                iconClass: "fa fa-android"
+            });
+
+            ensureRobotConfigNodeExists();
+
+            setupConfigNodeHTMl();
+            let pastNotificationRobotNames = [];
+            savedRobots = Object.values(globalRobotsConfigNode.robots).flat();
+            checkAndUpdateConnections(savedRobots, configuredRobotsAmount)
+            let updateConnectionIndicatorIntervall = setInterval(() => checkAndUpdateConnections(savedRobots, configuredRobotsAmount), 10000);
+            globalRobotsConfigNode.isConfigDirty = false; // we need to set this to false again, because node-red changes it to true after it filled the config node with the saved data
+        }
+
+        // Add your plugin as a new tabsheet in the right sidebar AFTER the flow editor is completely started
+        RED.events.on('runtime-state', initializeSidebar);
+        RED.events.on("deploy", function () {
+            setTimeout(() => {
+                if (globalRobotsConfigNode.isConfigDirty) {
+                    console.log("Config is dirty, recreating robot connections");
+                    ensureRobotConfigNodeExists();
+                    recreateRobotConnections(false, updateConnectionIndicator);
+                    globalRobotsConfigNode.isConfigDirty = false;
+                } else {
+                    // testRobotConnections(savedRobots).then(data => {
+                    //     updateConnectionIndicator(data);
+                    //     triggerCheckConnection();
+                    // }).catch(e => {
+                    //     console.error(e);
+                    // });
+                }
+
+                checkAndUpdateConnections(savedRobots, configuredRobotsAmount, true);
+            }, 100);
+        });
+    })();
+</script>
+
+<!-- The html for the right sidebar plugin screen -->
+<script type="text/x-red"
+    data-template-name="robotConnectionSidebar">
+<head>
+    <link rel="stylesheet"
+        type="text/css"
+        href="resources/node-red-contrib-base/base_start_styles.css">
+</head>
+<style>
+    .robot-sidebar-list-item .form-row {
+        display: flex;
+        align-items: center;
+    }
+
+    .robot-sidebar-list-item .form-row input {
+        width: 85%;
+        margin-right: .5em;
+        margin-bottom: 0;
+    }
+
+    .robot-sidebar-list-item .form-row span {
+        width: 3.5em;
+    }
+
+    .robot-sidebar-list-item .form-row i {}
+
+    .custom-robot-icons {
+        position: absolute;
+        right: -.35em;
+    }
+
+    .robot-container .ui-accordion-content {
+        padding: 0;
+    }
+</style>
+<template id="robotTemplate">
+    <div class="robot-sidebar-list-item">
+        <div class="form-row">
+            <span>Name:</span>
+            <input type="text"
+                class="custom-robot-name custom-robot-name-input"
+                required="true" />
+
+            <div class="custom-robot-icons">
+                <input type="hidden"
+                    class="custom-robot-connection-status-value"
+                    value="disconnected" />
+                <div class="custom-robot-connection-status-indicator-container">
+                    <i class="fa fa-check-circle fa-lg custom-robot-connection-status-icon status-indicator-connected"
+                        data-connection="connected"
+                        title="Connected"></i>
+                    <i class="fa fa-circle-o fa-lg custom-robot-connection-status-icon status-indicator-unknown"
+                        data-connection="unknown"
+                        title="Unknown"></i>
+                    <i class="fa fa-times-circle fa-lg custom-robot-connection-status-icon status-indicator-disconnected"
+                        data-connection="disconnected"
+                        title="Disconnected"></i>
+                    <i
+                        class="fa fa-circle-o-notch fa-spin fa-f fa-lg custom-robot-connection-status-icon status-indicator-loading"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row"
+            style="display: none;">
+            <span>Type:</span>
+            <input type="hidden"
+                class="custom-robot-type custom-robot-type-input"
+                required="true" />
+
+        </div>
+        <div class="form-row">
+            <span>IP:</span>
+            <input type="text"
+                class="custom-robot-ip custom-robot-ip-input"
+                required="true" />
+
+        </div>
+        <div class="form-row">
+            <span>Port:</span>
+            <input type="number"
+                class="custom-robot-port custom-robot-port-input"
+                min="1"
+                max="65535"
+                required="true" />
+
+        </div>
+        <!-- <div class="form-row">
+            <input type="hidden"
+                class="custom-robot-connection-status-value"
+                value="disconnected" />
+            <div class="custom-robot-connection-status-indicator-container">
+                <i class="fa fa-check-circle fa-lg custom-robot-connection-status-icon status-indicator-connected"
+                    data-connection="connected"
+                    title="Connected"></i>
+                <i class="fa fa-circle-o fa-lg custom-robot-connection-status-icon status-indicator-unknown"
+                    data-connection="unknown"
+                    title="Unknown"></i>
+                <i class="fa fa-times-circle fa-lg custom-robot-connection-status-icon status-indicator-disconnected"
+                    data-connection="disconnected"
+                    title="Disconnected"></i>
+                <i
+                    class="fa fa-circle-o-notch fa-spin fa-f fa-lg custom-robot-connection-status-icon status-indicator-loading"></i>
+            </div>
+        </div> -->
+    </div>
+</template>
+<div class="form-row robot-container">
+    <div id="accordion-pepper_android">
+        <h3>1️⃣ Pepper 2.9</h3>
+        <div>
+            <ol id="node-config-robot-list-pepper_android"></ol>
+        </div>
+    </div>
+    <div id="accordion-pepper">
+        <h3>2️⃣ Pepper</h3>
+        <div>
+            <ol id="node-config-robot-list-pepper"></ol>
+        </div>
+    </div>
+    <div id="accordion-temi">
+        <h3>3️⃣ Temi</h3>
+        <div>
+            <ol id="node-config-robot-list-temi"></ol>
+        </div>
+    </div>
+    <div id="accordion-sawyer">
+        <h3>4️⃣ Sawyer</h3>
+        <div>
+            <ol id="node-config-robot-list-sawyer"></ol>
+        </div>
+    </div>
+</div>
+</script>
