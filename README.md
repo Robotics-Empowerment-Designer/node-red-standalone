@@ -63,7 +63,7 @@ This project uses the official [Python bindings](https://github.com/aldebaran/li
 - This repository is the frontend part of NodeRed. Alone, is it useless. 
 - To connect the frontend with the robots, you need to include middleware repositories of one or more robots and start the respective docker-compose file. They are included as submodules, a Git functionality. More info on this [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules) and in the following section.
 
-1. Clone the NodeRed repository
+1. Clone this Node-Red repository
 
 2. For Pepper: initialize pepper_middleware subrepo in your project
 ```sh
