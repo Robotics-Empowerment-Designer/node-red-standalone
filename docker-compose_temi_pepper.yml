@@ -1,7 +1,15 @@
-
 include:
     - ./pepper-middleware/docker-compose.yml
 services:
+    mosquitto:
+        image: eclipse-mosquitto
+        volumes:
+        - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+        - ./mosquitto/data:/mosquitto/data
+        ports:
+        - "1883:1883"
+
+        
     node-red:
         image: node-red
         volumes:
@@ -55,3 +63,14 @@ services:
         depends_on:
             rest-server-pepper:
                 condition: service_healthy
+
+    
+    videoserver:
+        image: python:3.11-slim
+        working_dir: /videos
+        command: python -m http.server 8123 --bind 0.0.0.0
+        volumes:
+            - ./videos:/videos
+        ports:
+            - "8123:8123"
+        restart: unless-stopped

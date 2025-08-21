@@ -4,14 +4,21 @@ module.exports = function (RED) {
 
     
     const brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
 
      
     const Topic = "temi/waitforkeyword";
     const finishedTopic = "temi/wfk/finished";
 
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 
     function temiwaitForKeyword(config) {
         RED.nodes.createNode(this, config);

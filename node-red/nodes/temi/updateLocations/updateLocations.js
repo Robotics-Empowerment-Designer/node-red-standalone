@@ -4,7 +4,10 @@ module.exports = function (RED) {
 
     // Broker configuration
     var brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
 
      
@@ -12,7 +15,11 @@ module.exports = function (RED) {
     const locationsTopic = "temi/locations";
 
     
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 	
     
     function updateLocations(config) {

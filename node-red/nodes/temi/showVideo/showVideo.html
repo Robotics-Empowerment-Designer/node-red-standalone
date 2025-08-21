@@ -4,7 +4,7 @@
         color: "#4CAF50",
         defaults: {
             name: { value:"temiVideo" },
-            text: { value: "..." }
+            text: { value: "http://<your_server_ip>:8123/<playlist_file>.m3u8" }
         },
         inputs: 1,
         outputs: 1,
@@ -36,15 +36,15 @@
 <h3>Video conversion:</h3>
 <p>Use for example FFmpeg and the following command to convert a mp4-file to video chunks (TS files) and a playlist file (m3u8):</p>
 <pre><code>ffmpeg -i &lt;video_name.mp4&gt; -f hls -hls_time 10 -hls_list_size 6 -hls_segment_filename "video_%03d.ts" playlist.m3u8</code></pre>
+<p>Place the video files in the videos folder of this project.</p>
 
-<h3>Input</h3>
+<h3>Input:</h3>
 <p>To access the video from Temi use a URL like this:</p>
 <pre><code>http://&lt;your_server_ip&gt;:8123/&lt;playlist_file&gt;.m3u8</code></pre>
 
-<h3>Setting up the webserver:</h3>
-<p>A simple python webserveris used to make the video files accessible to the local network.</p>
-<p>Open a cmd terminal in the folder of the videos and run (edit in the IP address from your network):</p>
-<pre><code>python -m http.server 8123 --bind xxx.xx.xx.xx &</code></pre>
+<h3>The webserver:</h3>
+<p>A simple python webserver is used to make the video files accessible to the local network.</p>
+<p>It is automatically started together with Node-RED and accesses the videos folder in this project.</p>
 
 
 

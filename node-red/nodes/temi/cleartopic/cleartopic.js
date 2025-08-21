@@ -1,14 +1,21 @@
 module.exports = function (RED) {
     
     var brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
 
     // MQTT-Themen für Wait-Nachrichten und weitere Themen
     var topics = ["temi/wait", "temi/wait/finished", "temi/tts", "temi/tts/finished", "temi/clear", "temi/clear/finished", "temi/img", "temi/img/finished", "temi/txt", "temi/txt/finished", "temi/vid", "temi/vid/finished", "temi/tele", "temi/tele/finished", "temi/goto", "temi/goto/finished", "temi/waitforkeyword", "temi/wfk/finished"];
 
     
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 
      "wait"
     function cleartopic(config) {

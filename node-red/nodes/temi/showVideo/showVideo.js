@@ -3,11 +3,18 @@ module.exports = function (RED) {
     
 
     const brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
     
 
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 
     var showVideoTopic = "temi/vid";
     var finishedTopic = "temi/vid/finished";
@@ -121,7 +128,7 @@ module.exports = function (RED) {
             
             var messageText = config.text || "No input";
             var messageObject = {
-                text: messageText,
+                video: messageText,
                 id: node.id
             };
             var messageJSON = JSON.stringify(messageObject);

@@ -64,16 +64,29 @@ This project uses the official [Python bindings](https://github.com/aldebaran/li
 - To connect the frontend with the robots, you need to include middleware repositories of one or more robots and start the respective docker-compose file. They are included as submodules, a Git functionality. More info on this [here](https://git-scm.com/book/en/v2/Git-Tools-Submodules) and in the following section.
 
 1. Clone this repository
+    ```sh
+      git clone https://github.com/Robotics-Empowerment-Designer/node-red-standalone.git
+    ```
 
 2. For Pepper: initialize pepper_middleware subrepo in your project
     ```sh
       git submodule init
       git submodule add git@github.com:Robotics-Empowerment-Designer/pepper-middleware.git pepper-middleware
     ```
+    or
+    ```sh
+      git submodule init
+      git submodule add https://github.com:Robotics-Empowerment-Designer/pepper-middleware.git pepper-middleware
+    ```
 3. For Sawyer: Initialize sawyer_middleware subrepo in your project
      ```sh
       git submodule init
       git submodule add git@github.com:Robotics-Empowerment-Designer/sawyer-middleware.git sawyer-middleware
+    ```
+    or
+    ```sh
+      git submodule init
+      git submodule add https://github.com:Robotics-Empowerment-Designer/sawyer-middleware.git sawyer-middleware
     ```
 4. If you want to use Temi, install the Temi Middleware application on the robot and start the app "Mqtt" in the app overview.  
 
@@ -90,10 +103,12 @@ This project uses the official [Python bindings](https://github.com/aldebaran/li
        docker container ls
     ```
 
-8. To start the custom MQTT broker adjust the MQTT_BROKER_URL in the .env file of this project and BROKER_URL (For Localhost) in MainActivity.kt in the Temi Middleware application to your device IP. Afterwards run this command and check the connection with for example MQTT Explorer. If you want to use a broker with authentification you have to add the the username and password as env-variables and also adjust the Temi node files.
-    ```sh
-       docker compose -f docker-compose-mqtt.yml up
-    ```
+8. A custom MQTT broker for the communication with Temi is automatically started when running a docker compose file associated with Temi. 
+
+    You might need to adjust the MQTT_BROKER_URL in the .env file of this project and BROKER_URL (For Localhost) in MainActivity.kt in the Temi Middleware application to your device IP.
+
+    You can check the connection with for example MQTT Explorer. If you want to use a broker with authentification you have to adjust the env-variables MQTT_BROKER_USERNAME and MQTT_BROKER_PASSWORD.
+        
 
 
 9. After the initial setup is finished, you can start the respective middlewares along with NodeRed using one of the following commands: 
@@ -117,18 +132,10 @@ This project uses the official [Python bindings](https://github.com/aldebaran/li
       docker compose -f docker-compose_temi_sawyer_pepper.yml up 
     ```
 
-> **Note:**
-> The most important setting you need to configure is ROBOT_IP_PEPPER, you can leave everything else as it is (just press enter without changing the values). If you want to configure one of the values manually later, you can do this in the .env file. In the default hcr-lab environment, you do not need to change the values at all and can leave everything default.
-
-**Another Note:**
-Currently, the pepper nodes are necessary to start NodeRed² successfully, even if you do not use him. Feel free to submit a merge request if you have solved this issue. 
-
-<br/>
-
-> **IMPORTANT FOR TEMI USAGE: Every time you start the container with the node-red configuration (docker compose -f docker-compose_temi_sawyer_pepper.yml up), you need to start the Mqtt application on the temi robot. You can find the Mqtt application using the robot's tablet screen. You do not need to give the app permissions (grey screen)**
-
-> **Note on NodeRed**
-> The following documentation assumes that you're using the default port. If you changed the port in the configuration wizard you need to use the respective port instead.
+**IMPORTANT:**
+- Currently, the pepper nodes are necessary to start NodeRed² successfully, even if you do not use the robot. Feel free to submit a merge request if you have solved this issue. 
+- For Temi usage: Every time you start the container with the node-red configuration (docker compose -f docker-compose_temi_sawyer_pepper.yml up), you need to start the Mqtt application on the temi robot. You can find the Mqtt application using the Temi's tablet screen. You do not need to give the app permissions (grey screen).
+- The following documentation assumes that you're using the default port. If you changed the port in the configuration wizard you need to use the respective port instead.
 
 The application should now be running (under `http://<host-ip>:1880` or [http://localhost:1880](http://localhost:1880)) and both the log as well as the debug page (under `http://<host-ip>:5000` or [http://localhost:5000](http://localhost:5000)) should show `Connection type: Real robot`. If that isn't the case and it says `Connection type: disconnected` the application is running but a connection with the robot couldn't be established. Take a look at the [troubleshooting](#troubleshooting) section for more information.
 
@@ -150,6 +157,7 @@ The application should now be running (under `http://<host-ip>:1880` or [http://
    2. You can configure any node with a double-click on the respective node.
 4. Deploy your scenario (red button in the top-right corner).
 5. Start your flow (red square of the *Start*-node or blue square of the *Inject*-node).
+6. If you want to use the buttons on the tablet to start a flow go to this [instruction](https://github.com/Robotics-Empowerment-Designer/temi-middleware?tab=readme-ov-file#test-3-checking-that-the-display-buttons-work-correctly-with-node-red).
 
 ### About nodes
 Every robot has it's own nodes and needs to be controlled with only his own nodes. 

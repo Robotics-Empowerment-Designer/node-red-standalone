@@ -5,7 +5,10 @@ module.exports = function (RED) {
 
     
     const brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
 
     
@@ -13,7 +16,11 @@ module.exports = function (RED) {
     var finishedTopic = "temi/img/finished";
 
     
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 	
     function showImage(config) {
         RED.nodes.createNode(this, config);

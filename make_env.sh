@@ -24,7 +24,7 @@ declare -A std_env_vars=(
   ["REST_LOG_LEVEL"]="DEBUG"
   ["FLASK_IP_PEPPER"]=""
   ["FLASK_PORT_PEPPER"]="5001"
-  ["TEMI_PORT"]="1883"
+  ["TEMI_PORT"]="1885"
   ["TEMI_ADDRESS"]=""
   ["ROBOT_NAME"]="Sawyer"
   ["ROBOT_IP_SAWYER"]="sawyer.hcr-lab"
@@ -37,7 +37,9 @@ declare -A std_env_vars=(
   ["PORT"]="5000"
   ["REST_SERVER_PORT"]="5000"
   ["ROBOT_NAME"]="Sawyer"
-  ["MQTT_BROKER_URL"]="tcp://localhost:1885"
+  ["MQTT_BROKER_URL"]="tcp://localhost:1883"
+  ["MQTT_BROKER_USERNAME"]=""
+  ["MQTT_BROKER_PASSWORD"]=""
 )
 
 # Print menu to ask for values. Pressing Enter uses the standart-values defined above

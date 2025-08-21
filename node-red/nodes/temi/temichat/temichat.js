@@ -5,15 +5,22 @@ module.exports = function (RED) {
     
 
     const openAIConfig = {
-        apiKey: process.env.OPEN_API_KEY,
+        apiKey: process.env.OPENAI_API_KEY,
         endpoint: "https://api.openai.com/v1/chat/completions",
         model: "gpt-4o",
     };
 
     const brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
-    const mqttClient = mqtt.connect(brokerConfig.brokerurl);
+    const mqttClient = mqtt.connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 
     const sayTopic = "temi/tts";
     const finishedTopic = "temi/tts/finished";

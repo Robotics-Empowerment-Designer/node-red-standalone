@@ -4,14 +4,21 @@ module.exports = function (RED) {
     
     
     var brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
 
      
     var sayTopic = "temi/tele";
     var finishedTopic = "temi/tele/finished";
 
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 
     function tele(config) {
         RED.nodes.createNode(this, config);

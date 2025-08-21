@@ -4,13 +4,20 @@ module.exports = function (RED) {
     
 
     const brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
 
     const sayTopic = "temi/tts";
     const finishedTopic = "temi/tts/finished";
 
-    const mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    const mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 
     // Function to fetch event data from the API
     async function getEventDescriptions(date) {

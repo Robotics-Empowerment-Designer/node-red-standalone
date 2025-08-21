@@ -6,13 +6,20 @@ module.exports = function (RED) {
 
     // Configuration for the MQTT broker
     const brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL
+        brokerurl: process.env.MQTT_BROKER_URL,
+        username: process.env.MQTT_BROKER_USERNAME,
+        password: process.env.MQTT_BROKER_PASSWORD
+
     };
 
     const gotoTopic = "temi/goto";
     const finishedTopic = "temi/goto/finished";
 
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl);
+    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
+        username: brokerConfig.username,
+        password: brokerConfig.password
+    });
+
 
     function goto(config) {
         RED.nodes.createNode(this, config);
