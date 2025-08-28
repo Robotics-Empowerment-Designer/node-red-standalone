@@ -41,13 +41,13 @@ module.exports = {
      * node-red from being able to decrypt your existing credentials and they will be
      * lost.
      */
-    credentialSecret: false,
+    credentialSecret: process.env.NODE_RED_CREDENTIAL_SECRET || false,
 
     /** By default, the flow JSON will be formatted over multiple lines making
      * it easier to compare changes when using version control.
      * To disable pretty-printing of the JSON set the following property to false.
      */
-    flowFilePretty: true,
+    // flowFilePretty: true,
 
     /** By default, all user data is stored in a directory called `.node-red` under
      * the user's home directory. To use a different location, the following
@@ -59,6 +59,12 @@ module.exports = {
      * The following property can be used to specify an additional directory to scan.
      */
     //nodesDir: '/home/nol/.node-red/nodes',
+    // nodesDir: [
+    //     "/nodes/base",
+    //     "/nodes/pepper",
+    //     "/nodes/temi"
+    // ],
+
 
     /*******************************************************************************
      * Security
@@ -141,7 +147,8 @@ module.exports = {
      ******************************************************************************/
 
     /** the tcp port that the Node-RED web server is listening on */
-    uiPort: process.env.PORT || 1880,
+    // uiPort: process.env.NODE_RED_PORT || 1880,
+    uiPort: process.env.NODE_RED_PORT || 1880
 
     /** By default, the Node-RED UI accepts connections on all IPv4 interfaces.
      * To listen on all IPv6 addresses, set uiHost to "::",
@@ -262,12 +269,12 @@ module.exports = {
      * - ui: When `ui` is `true` (or unset), the action `show-system-info` will 
      *   be available to logged in users of node-red editor  
     */
-    diagnostics: {
-        /** enable or disable diagnostics endpoint. Must be set to `false` to disable */
-        enabled: true,
-        /** enable or disable diagnostics display in the node-red editor. Must be set to `false` to disable */
-        ui: true,
-    },
+    // diagnostics: {
+    //     /** enable or disable diagnostics endpoint. Must be set to `false` to disable */
+    //     enabled: true,
+    //     /** enable or disable diagnostics display in the node-red editor. Must be set to `false` to disable */
+    //     ui: true,
+    // },
     /** Configure runtimeState options 
      * - enabled:  When `enabled` is `true` flows runtime can be Started/Stoped 
      *   by POSTing to available at http://localhost:1880/flows/state  
@@ -275,60 +282,60 @@ module.exports = {
      *   `core:stop-flows` will be available to logged in users of node-red editor
      *   Also, the deploy menu (when set to default) will show a stop or start button
      */
-    runtimeState: {
-        /** enable or disable flows/state endpoint. Must be set to `false` to disable */
-        enabled: false,
-        /** show or hide runtime stop/start options in the node-red editor. Must be set to `false` to hide */
-        ui: false,
-    },
-    /** Configure the logging output */
-    logging: {
-        /** Only console logging is currently supported */
-        console: {
-            /** Level of logging to be recorded. Options are:
-             * fatal - only those errors which make the application unusable should be recorded
-             * error - record errors which are deemed fatal for a particular request + fatal errors
-             * warn - record problems which are non fatal + errors + fatal errors
-             * info - record information about the general running of the application + warn + error + fatal errors
-             * debug - record information which is more verbose than info + info + warn + error + fatal errors
-             * trace - record very detailed logging + debug + info + warn + error + fatal errors
-             * off - turn off all logging (doesn't affect metrics or audit)
-             */
-            level: process.env.NODE_RED_LOG_LEVEL || "warn",
-            /** Whether or not to include metric events in the log output */
-            metrics: false,
-            /** Whether or not to include audit events in the log output */
-            audit: false
-        },
+    // runtimeState: {
+    //     /** enable or disable flows/state endpoint. Must be set to `false` to disable */
+    //     enabled: false,
+    //     /** show or hide runtime stop/start options in the node-red editor. Must be set to `false` to hide */
+    //     ui: false,
+    // },
+    // /** Configure the logging output */
+    // logging: {
+    //     /** Only console logging is currently supported */
+    //     console: {
+    //         /** Level of logging to be recorded. Options are:
+    //          * fatal - only those errors which make the application unusable should be recorded
+    //          * error - record errors which are deemed fatal for a particular request + fatal errors
+    //          * warn - record problems which are non fatal + errors + fatal errors
+    //          * info - record information about the general running of the application + warn + error + fatal errors
+    //          * debug - record information which is more verbose than info + info + warn + error + fatal errors
+    //          * trace - record very detailed logging + debug + info + warn + error + fatal errors
+    //          * off - turn off all logging (doesn't affect metrics or audit)
+    //          */
+    //         level: process.env.NODE_RED_LOG_LEVEL || "warn",
+    //         /** Whether or not to include metric events in the log output */
+    //         metrics: false,
+    //         /** Whether or not to include audit events in the log output */
+    //         audit: false
+    //     },
 
-        restServerLogger: {
-            level: process.env.NODE_RED_LOG_LEVEL || "warn",
-            metrics: false,
-            handler: function (settings) {
-                const socket = require("../nodes/pepper/connection").socket;
+    //     restServerLogger: {
+    //         level: process.env.NODE_RED_LOG_LEVEL || "warn",
+    //         metrics: false,
+    //         handler: function (settings) {
+    //             const socket = require("../nodes/pepper/connection").socket;
 
-                return function (data) {
-                    if (socket.connected) {
-                        let message = data.msg;
-                        let level;
+    //             return function (data) {
+    //                 if (socket.connected) {
+    //                     let message = data.msg;
+    //                     let level;
 
-                        // map Node-RED log levels to flask log levels
-                        if (data.level <= 19) level = 50;
-                        else if (data.level <= 29) level = 40;
-                        else if (data.level <= 39) level = 30;
-                        else if (data.level <= 49) level = 20;
-                        else level = 10;
+    //                     // map Node-RED log levels to flask log levels
+    //                     if (data.level <= 19) level = 50;
+    //                     else if (data.level <= 29) level = 40;
+    //                     else if (data.level <= 39) level = 30;
+    //                     else if (data.level <= 49) level = 20;
+    //                     else level = 10;
 
-                        if ("id" in data && "type" in data) {
-                            message = `[${data.type}:${data.id}] ${data.msg}`;
-                        }
+    //                     if ("id" in data && "type" in data) {
+    //                         message = `[${data.type}:${data.id}] ${data.msg}`;
+    //                     }
 
-                        socket.emit("/log", [level, message]);
-                    }
-                }
-            }
-        }
-    },
+    //                     socket.emit("/log", [level, message]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // },
 
     /** Context Storage
      * The following property can be used to enable context storage. The configuration
@@ -349,7 +356,7 @@ module.exports = {
      * By default, the property is set to false to avoid accidental exposure of
      * their values. Setting this to true will cause the keys to be listed.
      */
-    exportGlobalContextKeys: false,
+    // exportGlobalContextKeys: false,
 
     /** Configure how the runtime will handle external npm modules.
      * This covers:
@@ -359,24 +366,24 @@ module.exports = {
      * The allow/denyList options can be used to limit what modules the runtime
      * will install/load. It can use '*' as a wildcard that matches anything.
      */
-    externalModules: {
-        // autoInstall: false,   /** Whether the runtime will attempt to automatically install missing modules */
-        // autoInstallRetry: 30, /** Interval, in seconds, between reinstall attempts */
-        // palette: {              /** Configuration for the Palette Manager */
-        //     allowInstall: true, /** Enable the Palette Manager in the editor */
-        //     allowUpdate: true,  /** Allow modules to be updated in the Palette Manager */
-        //     allowUpload: true,  /** Allow module tgz files to be uploaded and installed */
-        //     allowList: ['*'],
-        //     denyList: [],
-        //     allowUpdateList: ['*'],
-        //     denyUpdateList: []
-        // },
-        // modules: {              /** Configuration for node-specified modules */
-        //     allowInstall: true,
-        //     allowList: [],
-        //     denyList: []
-        // }
-    },
+    // externalModules: {
+    //     // autoInstall: false,   /** Whether the runtime will attempt to automatically install missing modules */
+    //     // autoInstallRetry: 30, /** Interval, in seconds, between reinstall attempts */
+    //     // palette: {              /** Configuration for the Palette Manager */
+    //     //     allowInstall: true, /** Enable the Palette Manager in the editor */
+    //     //     allowUpdate: true,  /** Allow modules to be updated in the Palette Manager */
+    //     //     allowUpload: true,  /** Allow module tgz files to be uploaded and installed */
+    //     //     allowList: ['*'],
+    //     //     denyList: [],
+    //     //     allowUpdateList: ['*'],
+    //     //     denyUpdateList: []
+    //     // },
+    //     // modules: {              /** Configuration for node-specified modules */
+    //     //     allowInstall: true,
+    //     //     allowList: [],
+    //     //     denyList: []
+    //     // }
+    // },
 
 
     /*******************************************************************************
@@ -395,63 +402,63 @@ module.exports = {
      * See https://nodered.org/docs/user-guide/runtime/configuration#editor-themes
      * for all available options.
      */
-    editorTheme: {
-        /** The following property can be used to set a custom theme for the editor.
-         * See https://github.com/node-red-contrib-themes/theme-collection for
-         * a collection of themes to chose from.
-         */
-        //theme: "",
+    // editorTheme: {
+    //     /** The following property can be used to set a custom theme for the editor.
+    //      * See https://github.com/node-red-contrib-themes/theme-collection for
+    //      * a collection of themes to chose from.
+    //      */
+    //     //theme: "",
 
-        /** To disable the 'Welcome to Node-RED' tour that is displayed the first
-         * time you access the editor for each release of Node-RED, set this to false
-         */
-        //tours: false,
+    //     /** To disable the 'Welcome to Node-RED' tour that is displayed the first
+    //      * time you access the editor for each release of Node-RED, set this to false
+    //      */
+    //     //tours: false,
 
-        palette: {
-            /** The following property can be used to order the categories in the editor
-             * palette. If a node's category is not in the list, the category will get
-             * added to the end of the palette.
-             * If not set, the following default order is used:
-             */
-            //categories: ['subflows', 'common', 'function', 'network', 'sequence', 'parser', 'storage'],
-        },
+    //     palette: {
+    //         /** The following property can be used to order the categories in the editor
+    //          * palette. If a node's category is not in the list, the category will get
+    //          * added to the end of the palette.
+    //          * If not set, the following default order is used:
+    //          */
+    //         //categories: ['subflows', 'common', 'function', 'network', 'sequence', 'parser', 'storage'],
+    //     },
 
-        projects: {
-            /** To enable the Projects feature, set this value to true */
-            enabled: false,
-            workflow: {
-                /** Set the default projects workflow mode.
-                 *  - manual - you must manually commit changes
-                 *  - auto - changes are automatically committed
-                 * This can be overridden per-user from the 'Git config'
-                 * section of 'User Settings' within the editor
-                 */
-                mode: "manual"
-            }
-        },
+    //     projects: {
+    //         /** To enable the Projects feature, set this value to true */
+    //         enabled: false,
+    //         workflow: {
+    //             /** Set the default projects workflow mode.
+    //              *  - manual - you must manually commit changes
+    //              *  - auto - changes are automatically committed
+    //              * This can be overridden per-user from the 'Git config'
+    //              * section of 'User Settings' within the editor
+    //              */
+    //             mode: "manual"
+    //         }
+    //     },
 
-        codeEditor: {
-            /** Select the text editor component used by the editor.
-             * As of Node-RED V3, this defaults to "monaco", but can be set to "ace" if desired
-             */
-            lib: "monaco",
-            options: {
-                /** The follow options only apply if the editor is set to "monaco"
-                 *
-                 * theme - must match the file name of a theme in
-                 * packages/node_modules/@node-red/editor-client/src/vendor/monaco/dist/theme
-                 * e.g. "tomorrow-night", "upstream-sunburst", "github", "my-theme"
-                 */
-                // theme: "vs",
-                /** other overrides can be set e.g. fontSize, fontFamily, fontLigatures etc.
-                 * for the full list, see https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneEditorConstructionOptions.html
-                 */
-                //fontSize: 14,
-                //fontFamily: "Cascadia Code, Fira Code, Consolas, 'Courier New', monospace",
-                //fontLigatures: true,
-            }
-        }
-    },
+    //     codeEditor: {
+    //         /** Select the text editor component used by the editor.
+    //          * As of Node-RED V3, this defaults to "monaco", but can be set to "ace" if desired
+    //          */
+    //         lib: "monaco",
+    //         options: {
+    //             /** The follow options only apply if the editor is set to "monaco"
+    //              *
+    //              * theme - must match the file name of a theme in
+    //              * packages/node_modules/@node-red/editor-client/src/vendor/monaco/dist/theme
+    //              * e.g. "tomorrow-night", "upstream-sunburst", "github", "my-theme"
+    //              */
+    //             // theme: "vs",
+    //             /** other overrides can be set e.g. fontSize, fontFamily, fontLigatures etc.
+    //              * for the full list, see https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneEditorConstructionOptions.html
+    //              */
+    //             //fontSize: 14,
+    //             //fontFamily: "Cascadia Code, Fira Code, Consolas, 'Courier New', monospace",
+    //             //fontLigatures: true,
+    //         }
+    //     }
+    // },
 
     /*******************************************************************************
      * Node Settings
@@ -480,7 +487,7 @@ module.exports = {
     //fileWorkingDirectory: "",
 
     /** Allow the Function node to load additional npm modules directly */
-    functionExternalModules: true,
+    // functionExternalModules: true,
 
     /** The following property can be used to set predefined values in Global Context.
      * This allows extra node modules to be made available with in Function node.
@@ -489,9 +496,9 @@ module.exports = {
      * will allow the `os` module to be accessed in a Function node using:
      *    global.get("os")
      */
-    functionGlobalContext: {
-        // os:require('os'),
-    },
+    // functionGlobalContext: {
+    //     // os:require('os'),
+    // },
 
     /** The maximum number of messages nodes will buffer internally as part of their
      * operation. This applies across a range of nodes that operate on message sequences.
@@ -512,7 +519,7 @@ module.exports = {
     //debugUseColors: true,
 
     /** The maximum length, in characters, of any message sent to the debug sidebar tab */
-    debugMaxLength: 1000,
+    // debugMaxLength: 1000,
 
     /** Maximum buffer size for the exec node. Defaults to 10Mb */
     //execMaxBufferSize: 10000000,
@@ -521,10 +528,10 @@ module.exports = {
     //httpRequestTimeout: 120000,
 
     /** Retry time in milliseconds for MQTT connections */
-    mqttReconnectTime: 15000,
+    // mqttReconnectTime: 15000,
 
     /** Retry time in milliseconds for Serial port connections */
-    serialReconnectTime: 15000,
+    // serialReconnectTime: 15000,
 
     /** Retry time in milliseconds for TCP socket connections */
     //socketReconnectTime: 10000,

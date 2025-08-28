@@ -1,9 +1,9 @@
-const got = require("got");
+const got = (...args) => import('got').then(module => module.default(...args));
 const nodeRedPort = require("./config").nodeRedPort;
 
 class NodeHelper {
     async getFlows() {
-        const { body } = await got.get(`http://localhost:${nodeRedPort}/flows`, { responseType: "json" });
+        const { body } = await got(`http://localhost:${nodeRedPort}/flows`, { responseType: "json" });
 
         const flows = [];
 
@@ -17,7 +17,7 @@ class NodeHelper {
     }
 
     async getNodesInFlow(flowId) {
-        const { body } = (await got.get(`http://localhost:${nodeRedPort}/flow/${flowId}`, { responseType: "json" }));
+        const { body } = (await got(`http://localhost:${nodeRedPort}/flow/${flowId}`, { responseType: "json" }));
         return body.nodes;
     }
 

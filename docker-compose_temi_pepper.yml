@@ -1,6 +1,7 @@
 include:
     - ./pepper-middleware/docker-compose.yml
 services:
+
     mosquitto:
         image: eclipse-mosquitto
         volumes:
@@ -9,17 +10,23 @@ services:
         ports:
         - "1883:1883"
 
-        
     node-red:
-        image: node-red
+        image: nodered/node-red:latest
+        build: .
+        user: "${UID:-1000}:${GID:-1000}"
+        ports:
+        - "${NODE_RED_PORT}:${NODE_RED_PORT}"
         volumes:
-        # only show nodes of base, pepper and temi together with surveys
+            # show only nodes of temi and pepper (currently still necessary) with surveys
             - "./node-red/data:/data/"
-            - "./node-red/nodes/base/:/nodes/base/:ro"
-            - "./node-red/nodes/pepper/:/nodes/pepper/:ro"
-            - "./node-red/nodes/temi/:/nodes/temi/:ro"  
-            - "./node-red/settingsTemplate.js:/usr/src/node-red/settingsTemplate.js:ro"
+            
+            - "./node-red/settings.js:/data/settings.js:ro"
             - ./node-red/answer_surveys:/usr/src/node-red/answer_surveys
+        command: >
+            bash -c "chown -R node-red:node-red /data && su-exec node-red:node-red /usr/src/node-red/node_modules/.bin/node-red --userDir /data --settings /data/settings.js"
+        # bash -c "chown -R 1000:1000 /data && /usr/src/node-red/node_modules/.bin/node-red --userDir /data --settings /data/settings.js"
+
+
         environment:
             # TODO: Check and delete possible unnecessary environment variables
             - "FLASK_DEBUG=${FLASK_DEBUG?error}"
@@ -51,20 +58,15 @@ services:
             - "MQTT_BROKER_USERNAME=${MQTT_BROKER_USERNAME}"
             - "MQTT_BROKER_PASSWORD=${MQTT_BROKER_PASSWORD}"
             - TZ=Europe/Berlin
-        network_mode: host
+        # network_mode: host
         restart: on-failure:5
         healthcheck:
             test: ["CMD", "curl --fail http://localhost:${NODE_RED_PORT}"]
             interval: 30s
             timeout: 10s
             retries: 5
-            start_period: 60s
+            start_period: 45s
 
-        depends_on:
-            rest-server-pepper:
-                condition: service_healthy
-
-    
     videoserver:
         image: python:3.11-slim
         working_dir: /videos
@@ -74,3 +76,114 @@ services:
         ports:
             - "8123:8123"
         restart: unless-stopped
+
+    node-red-group1:
+        image: nodered/node-red:latest
+        build: .
+        user: "${UID:-1000}:${GID:-1000}"
+        ports:
+        - "${NODE_RED_PORT_GROUP1}:${NODE_RED_PORT_GROUP1}"
+        volumes:
+        - "./node-red/data-group1:/data/"
+        - "./node-red/settings.js:/data/settings.js:ro"
+        - ./node-red/answer_surveys:/usr/src/node-red/answer_surveys
+        command: >
+            bash -c "chown -R node-red:node-red /data && su-exec node-red:node-red /usr/src/node-red/node_modules/.bin/node-red --userDir /data --settings /data/settings.js"
+        # bash -c "chown -R 1000:1000 /data && /usr/src/node-red/node_modules/.bin/node-red --userDir /data --settings /data/settings.js"
+        environment:
+            # Point to the Group 1 port variable from the .env file
+            - "NODE_RED_PORT=${NODE_RED_PORT_GROUP1?error}"
+            - "NODE_RED_LOG_LEVEL=${NODE_RED_LOG_LEVEL_GROUP1}"
+            - "FLASK_DEBUG=${FLASK_DEBUG?error}"
+            - "FLASK_PORT=${FLASK_PORT?error}"
+            - "FLASK_PORT_PEPPER=${FLASK_PORT_PEPPER?error}"
+            - "FLASK_IP=${FLASK_IP}"
+            - "FLASK_IP_PEPPER=${FLASK_IP_PEPPER}"
+            - "PYTHONUNBUFFERED=${PYTHONUNBUFFERED?error}"
+            - "QI_LOG_LEVEL=${QI_LOG_LEVEL?error}"
+            - "NODE_RED_PORT_PEPPER=${NODE_RED_PORT_PEPPER?error}"
+            - "NODE_RED_LOG_LEVEL=${NODE_RED_LOG_LEVEL}"
+            - "NODE_ENV=${NODE_ENV?error}"
+            - "REST_SERVER_PORT=${REST_SERVER_PORT?error}"
+            - "REST_LOG_LEVEL=${REST_LOG_LEVEL?error}"
+            - "PEPPER_REST_SERVER_IP=${PEPPER_REST_SERVER_IP?error}"
+            - "PEPPER_REST_SERVER_PORT=${PEPPER_REST_SERVER_PORT?error}"
+            - "ROBOT_NAME=${ROBOT_NAME?error}"
+            - "ROBOT_IP_SAWYER=${ROBOT_IP_SAWYER?error}"
+            - "ROBOT_NAME_PEPPER=${ROBOT_NAME_PEPPER?error}"
+            - "ROBOT_IP_PEPPER=${ROBOT_IP_PEPPER?error}"
+            - "TEMI_PORT=${TEMI_PORT?error}"
+            - "TEMI_ADDRESS=${TEMI_ADDRESS?error}"
+            - "MQTT_PORT_PEPPER=${MQTT_PORT_PEPPER?error}"
+            - "HOST_IP=${HOST_IP?error}"
+            - "HOSTNAME=${HOSTNAME?error}"
+            - "OPENAI_API_KEY=${OPENAI_API_KEY}"
+            - "MQTT_BROKER_URL=${MQTT_BROKER_URL}"
+            - "MQTT_BROKER_USERNAME=${MQTT_BROKER_USERNAME}"
+            - "MQTT_BROKER_PASSWORD=${MQTT_BROKER_PASSWORD}"
+            - TZ=Europe/Berlin
+        # network_mode: host
+        restart: on-failure:5
+        healthcheck:
+            # The healthcheck must also use the correct port variable
+            test: ["CMD", "curl --fail http://localhost:${NODE_RED_PORT_GROUP1}"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 60s
+
+        # This is the service for Group 2
+    node-red-group2:
+        image: nodered/node-red:latest
+        build: .
+        user: "${UID:-1000}:${GID:-1000}"
+        ports:
+        - "${NODE_RED_PORT_GROUP2}:${NODE_RED_PORT_GROUP2}"
+        volumes:
+        - "./node-red/data-group2:/data/"
+        - "./node-red/settings.js:/data/settings.js:ro"
+        - ./node-red/answer_surveys:/usr/src/node-red/answer_surveys
+        command: >
+            bash -c "chown -R node-red:node-red /data && su-exec node-red:node-red /usr/src/node-red/node_modules/.bin/node-red --userDir /data --settings /data/settings.js"
+        # bash -c "chown -R 1000:1000 /data && /usr/src/node-red/node_modules/.bin/node-red --userDir /data --settings /data/settings.js"
+        environment:
+            # Point to the Group 2 port variable from the .env file
+            - "NODE_RED_PORT=${NODE_RED_PORT_GROUP2?error}"
+            - "NODE_RED_LOG_LEVEL=${NODE_RED_LOG_LEVEL_GROUP2}"
+            - "FLASK_DEBUG=${FLASK_DEBUG?error}"
+            - "FLASK_PORT=${FLASK_PORT?error}"
+            - "FLASK_PORT_PEPPER=${FLASK_PORT_PEPPER?error}"
+            - "FLASK_IP=${FLASK_IP}"
+            - "FLASK_IP_PEPPER=${FLASK_IP_PEPPER}"
+            - "PYTHONUNBUFFERED=${PYTHONUNBUFFERED?error}"
+            - "QI_LOG_LEVEL=${QI_LOG_LEVEL?error}"
+            - "NODE_RED_PORT_PEPPER=${NODE_RED_PORT_PEPPER?error}"
+            - "NODE_RED_LOG_LEVEL=${NODE_RED_LOG_LEVEL}"
+            - "NODE_ENV=${NODE_ENV?error}"
+            - "REST_SERVER_PORT=${REST_SERVER_PORT?error}"
+            - "REST_LOG_LEVEL=${REST_LOG_LEVEL?error}"
+            - "PEPPER_REST_SERVER_IP=${PEPPER_REST_SERVER_IP?error}"
+            - "PEPPER_REST_SERVER_PORT=${PEPPER_REST_SERVER_PORT?error}"
+            - "ROBOT_NAME=${ROBOT_NAME?error}"
+            - "ROBOT_IP_SAWYER=${ROBOT_IP_SAWYER?error}"
+            - "ROBOT_NAME_PEPPER=${ROBOT_NAME_PEPPER?error}"
+            - "ROBOT_IP_PEPPER=${ROBOT_IP_PEPPER?error}"
+            - "TEMI_PORT=${TEMI_PORT?error}"
+            - "TEMI_ADDRESS=${TEMI_ADDRESS?error}"
+            - "MQTT_PORT_PEPPER=${MQTT_PORT_PEPPER?error}"
+            - "HOST_IP=${HOST_IP?error}"
+            - "HOSTNAME=${HOSTNAME?error}"
+            - "OPENAI_API_KEY=${OPENAI_API_KEY}"
+            - "MQTT_BROKER_URL=${MQTT_BROKER_URL}"
+            - "MQTT_BROKER_USERNAME=${MQTT_BROKER_USERNAME}"
+            - "MQTT_BROKER_PASSWORD=${MQTT_BROKER_PASSWORD}"
+            - TZ=Europe/Berlin
+        # network_mode: host
+        restart: on-failure:5
+        healthcheck:
+            # The healthcheck must also use the correct port variable
+            test: ["CMD", "curl --fail http://localhost:${NODE_RED_PORT_GROUP2}"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 60s

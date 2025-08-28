@@ -37,6 +37,7 @@
     }
   },
   "dependencies": {
-    "mqtt": "^5.3.3"
+    "mqtt": "^5.3.3",
+    "node-fetch": "2.6.7"
   }
 }

@@ -1,5 +1,5 @@
 module.exports = RED => {
-    const got = require("got");
+    const got = (...args) => import('got').then(module => module.default(...args));
     const socket = require("../connection").socket;
     const ConnectionHelper = require("../connectionHelper");
     const serverUrl = require('node-red-contrib-base/config').serverUrl;
@@ -11,7 +11,8 @@ module.exports = RED => {
     events.subscribe(EventPubSub.INIT_EVENT, async () => {
         try {
             const animationNames = animations.reduce((acc, curVal) => acc.concat(curVal["value"]), []);
-            const { body } = await got.post(`${serverUrl}/robot/animations/validate`, { json: { animations: animationNames } });
+            // const { body } = await got.post(`${serverUrl}/robot/animations/validate`, { json: { animations: animationNames } });
+            const { body } = await got(`${serverUrl}/robot/animations/validate`, {method: 'POST', json: { animations: animationNames }});
             const invalidAnimations = JSON.parse(body);
 
             validAnimations = animations.filter(animation => !invalidAnimations.includes(animation.value));

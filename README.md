@@ -8,11 +8,11 @@
 - [Key components](#key-components)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Limitations for Pepper Robot](#limitations-for-pepper-robot)  
+  - [Limitations for Pepper Robot](#limitations-for-pepper-robot)
   - [Installation](#installation)
     - [Preliminary explanations](#preliminary-explanations)
 - [Usage](#usage)
-  - [About nodes](#about-nodes)  
+  - [About nodes](#about-nodes)
   - [Node list](#node-list)
 - [Architecture](#architecture)
   - [Pepper robot](#pepper-robot)
@@ -22,7 +22,7 @@
 - [Contributing](#contributing)
 - [License](#license)
 - [Setup Pepper/Salt, currently WIP](#setup-peppersalt-currently-wip)
-- [Temi and LimeSurvey, currently not tested](#temi-and-limesurvey)
+  - [Temi and LimeSurvey, currently not tested](#temi-and-limesurvey-currently-not-tested)
 - [Configuration](#configuration)
 
 ## About the project
@@ -130,6 +130,11 @@ This project uses the official [Python bindings](https://github.com/aldebaran/li
 
       # Sawyer, Pepper & Temi
       docker compose -f docker-compose_temi_sawyer_pepper.yml up 
+    ```
+
+10. (Optional) If you encounter an error(Error: EACCES: permission denied, mkdir '/data/node_modules') after running above command go to inside the `node-red-standalone` where your docker-compose file is also located. Then run below command. (You have to adjust group folder which depends on number of groups you are trying to create)
+    ```sh
+      sudo chown -R 1000:1000 ./node-red/data-group1 ./node-red/data-group2
     ```
 
 **IMPORTANT:**

@@ -2,7 +2,7 @@ module.exports = RED => {
     const socket = require("../connection").socket;
     const ConnectionHelper = require("../connectionHelper");
     const EventPubSub = require('node-red-contrib-base/eventPubSub');
-    const got = require("got");
+    const got = (...args) => import('got').then(module => module.default(...args));
     let lastReset = 0;
 
     const urlCache = {};
@@ -53,7 +53,7 @@ module.exports = RED => {
                     return;
                 }
 
-                const { headers } = (await got.get(config.url));
+                const { headers } = (await got(config.url));
                 urlCache[config.url] = headers["content-type"].startsWith("image/");
 
                 if (!headers["content-type"].startsWith("image/")) {

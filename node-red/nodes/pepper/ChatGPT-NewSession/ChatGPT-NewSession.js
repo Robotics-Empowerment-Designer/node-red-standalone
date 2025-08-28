@@ -1,5 +1,5 @@
 module.exports = RED => {
-    const got = require("got");
+    const got = (...args) => import('got').then(module => module.default(...args));
 
     // Define the ChatGPTNewSessionNode function
     function ChatGPTNewSessionNode(config) {
@@ -181,7 +181,7 @@ Scratch,animations/Stand/Waiting/ScratchHead_1,1,0,"""scratching oneselfs head""
             // Welcome post to initiate a new session
             try {
                 node.status({ fill: "blue", shape: "dot", text: node.type + ".welcome" });
-                const response = await got.post("https://api.openai.com/v1/chat/completions", { headers: headers, json: data }).json();
+                const response = await got("https://api.openai.com/v1/chat/completions", { headers: headers, json: data, method: 'post' }).json();
 
                 // Update the message payload with the assistant's response and conversation history
                 msg.payload = response.choices[0].message.content;

@@ -1,20 +1,50 @@
 module.exports = function (RED) {
+
+    try {
+        const gotVersion = require('got/package.json').version;
+        RED.log.error(`--- VERIFYING GOT VERSION ---`);
+        RED.log.error(`The installed version of 'got' is: ${gotVersion}`);
+        RED.log.error(`---------------------------`);
+    } catch (e) {
+        RED.log.error("Could not find the 'got' package to verify its version.");
+    }
+
     const {interruptHandling} = require("../interruptHelper");
     
     
-    const brokerConfig = {
-        brokerurl: process.env.MQTT_BROKER_URL,
-        username: process.env.MQTT_BROKER_USERNAME,
-        password: process.env.MQTT_BROKER_PASSWORD
+    const brokerUrl = process.env.MQTT_BROKER_URL;
+    const connectOptions = {};
 
-    };
+    if (process.env.MQTT_BROKER_USERNAME) {
+        connectOptions.username = process.env.MQTT_BROKER_USERNAME;
+    }
+    if (process.env.MQTT_BROKER_PASSWORD) {
+        connectOptions.password = process.env.MQTT_BROKER_PASSWORD;
+    }
 
-    var mqttClient = require("mqtt").connect(brokerConfig.brokerurl, {
-        username: brokerConfig.username,
-        password: brokerConfig.password
+    // **LOG 1: Log the connection details before attempting to connect**
+    RED.log.warn("--- TEMI MQTT CONNECTION ---");
+    RED.log.warn(`Attempting to connect to broker: ${brokerUrl}`);
+    RED.log.warn(`Connection options: ${JSON.stringify(connectOptions)}`);
+    RED.log.warn("--------------------------");
+
+    var mqttClient = require("mqtt").connect(brokerUrl, connectOptions);
+
+    // **LOG 2: Add event listeners to see the connection status**
+    mqttClient.on('connect', function () {
+        RED.log.info("Successfully connected to MQTT broker.");
     });
 
+    mqttClient.on('error', function (err) {
+        // This is the most important log for debugging connection issues!
+        RED.log.error(`MQTT Error: ${err.message}`);
+    });
 
+    mqttClient.on('reconnect', function () {
+        RED.log.warn("MQTT client is trying to reconnect...");
+    });
+    
+    
     function say(config) {
         RED.nodes.createNode(this, config);
         var node = this;

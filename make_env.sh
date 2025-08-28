@@ -13,7 +13,7 @@ declare -A std_env_vars=(
   ["NODE_RED_PORT"]="1880"
   ["HOSTNAME"]="node-red"
   ["NODE_RED_LOG_LEVEL"]="warn"
-  ["PEPPER_REST_SERVER_IP"]="127.0.0.1"
+  ["PEPPER_REST_SERVER_IP"]="pepper-rest-server"
   ["PEPPER_REST_SERVER_PORT"]="5001"
   ["ROBOT_IP_PEPPER"]="salt.hcr-lab"
   ["NODE_RED_PORT_PEPPER"]="1881"
@@ -37,9 +37,17 @@ declare -A std_env_vars=(
   ["PORT"]="5000"
   ["REST_SERVER_PORT"]="5000"
   ["ROBOT_NAME"]="Sawyer"
-  ["MQTT_BROKER_URL"]="tcp://localhost:1883"
+  ["MQTT_BROKER_URL"]="mqtt://mosquitto:1883"
   ["MQTT_BROKER_USERNAME"]=""
   ["MQTT_BROKER_PASSWORD"]=""
+  ["UID"]="$(id -u)"
+  ["GID"]="$(id -g)"
+  ["NODE_PATH"]="/nodes"
+  ["NODE_RED_PORT"]=1880
+  ["NODE_RED_PORT_GROUP1"]=1881
+  ["NODE_RED_LOG_LEVEL_GROUP1"]=info
+  ["NODE_RED_PORT_GROUP2"]=1882
+  ["NODE_RED_LOG_LEVEL_GROUP2"]=info
 )
 
 # Print menu to ask for values. Pressing Enter uses the standart-values defined above

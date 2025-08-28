@@ -1,6 +1,6 @@
 module.exports = RED => {
     const openaiAPIKey = process.env.OPENAI_API_KEY;
-    const got = require("got");
+    const got = (...args) => import('got').then(module => module.default(...args));
     const EventPubSub = require('node-red-contrib-base/eventPubSub');
 
     const events = new EventPubSub();
@@ -47,7 +47,8 @@ module.exports = RED => {
             }
 
             try {
-                const { body } = await got.post("https://api.openai.com/v1/completions", { json: openAISettings, headers });
+                // const { body } = await got.post("https://api.openai.com/v1/completions", { json: openAISettings, headers });
+                const { body } = await got("https://api.openai.com/v1/completions", {method: 'POST', json: openAISettings, headers});
                 const json = JSON.parse(body);
                 const answer = json.choices[0].text.trim();
                 const tokens = json.usage.total_tokens;

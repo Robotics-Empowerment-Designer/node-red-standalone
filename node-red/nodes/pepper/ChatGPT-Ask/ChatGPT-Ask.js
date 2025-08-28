@@ -1,5 +1,5 @@
 module.exports = RED => {
-    const got = require("got");
+    const got = (...args) => import('got').then(module => module.default(...args));
 
     // Define the ChatGPTAskNode function
     function ChatGPTAskNode(config) {
@@ -55,7 +55,7 @@ module.exports = RED => {
             // Make the request to the ChatGPT API
             try {
                 node.status({ fill: "blue", shape: "dot", text: node.type + ".wait" });
-                const response = await got.post("https://api.openai.com/v1/chat/completions", { headers: headers, json: data }).json();
+                const response = await got("https://api.openai.com/v1/chat/completions", { headers: headers, json: data, method: 'post' }).json();
 
                 // Add the assistant's response to the conversation history
                 addToHistory("assistant", response.choices[0].message.content);
